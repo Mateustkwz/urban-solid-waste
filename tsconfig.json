@@ -2,16 +2,34 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "resolveJsonModule": true,
+    "types": ["jest", "node"],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@app/*": ["./src/app/*"],
+      "@models/*": ["./src/models/*"],
+      "@repositories/*": ["./src/repositories/*"],
+      "@services/*": ["./src/services/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@context/*": ["./src/context/*"],
+      "@storage/*": ["./src/storage/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@components/*": ["./src/components/*"],
+      "@theme/*": ["./src/theme/*"],
+      "@types/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@mocks/*": ["./src/mocks/*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+    "expo-env.d.ts",
+    "src/__tests__/**/*.ts",
+    "jest.setup.ts"
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }
