@@ -1,6 +1,7 @@
-export interface User {
+import { UserRole } from "@app-types/user.type";
+interface UserModel {
   id: string;
-  role: "citizen" | "association" | "cityHall";
+  role: UserRole;
   name: string;
   cpf_or_cnpj: string;
   address: string;
@@ -8,3 +9,9 @@ export interface User {
   password: string;
   points: number;
 }
+
+interface UserSchema {
+  [key: string]: UserModel;
+}
+
+export { UserModel, UserSchema };
