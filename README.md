@@ -1,6 +1,6 @@
 # Urban Solid Waste App ♻️
 
-Um aplicativo móvel desenvolvido como parte de um **Trabalho de Conclusão de Curso (TCC) em Engenharia Eletrônica**, com o objetivo de incentivar o descarte correto de resíduos sólidos, aumentar os índices de reciclagem e promover a sustentabilidade ambiental por meio do engajamento da população, coleta seletiva e um sistema de recompensas.
+Um aplicativo móvel desenvolvido como parte de um **Trabalho de Conclusão de Curso (TCC) em Engenharia Eletrônica**, com o objetivo de incentivar o descarte correto de resíduos sólidos, promover a sustentabilidade ambiental por meio do engajamento da população, coleta seletiva e um sistema de recompensas.
 
 O projeto consiste em um **protótipo frontend** desenvolvido com **React Native + Expo**, onde toda a persistência de dados é simulada utilizando **AsyncStorage**, dispensando um backend real, mas demonstrando todo o fluxo de funcionamento da aplicação.
 
@@ -37,13 +37,14 @@ As Associações de Catadores confirmam as entregas realizadas e creditam pontos
 | React Native       | Desenvolvimento Mobile        |
 | Expo SDK 54        | Plataforma de Desenvolvimento |
 | TypeScript         | Tipagem Estática              |
-| Expo Router        | Navegação                     |
+| React Navigation   | Navegação                     |
 | NativeWind         | Estilização                   |
 | React Native Paper | Componentes Material Design   |
 | React Hook Form    | Formulários                   |
 | Zod                | Validação                     |
 | AsyncStorage       | Persistência Local            |
-| Context API        | Autenticação e Estado Global  |
+| Expo Secure Store  | Persistência Dados Sensíveis  |
+| Zustand            | Autenticação e Estado Global  |
 
 ---
 
@@ -110,7 +111,7 @@ UI
 Aplicação
 │
 ├── Hooks
-├── Context
+├── Provider
 ├── Serviços
 │
 Dados
@@ -154,7 +155,7 @@ A interface nunca acessa diretamente o AsyncStorage.
 # 📂 Estrutura do Projeto
 
 ```text
-app/
+navigation/
 │
 ├── (auth)/
 │   ├── login.tsx
@@ -198,13 +199,16 @@ src/
 ├── repositories/
 ├── storage/
 ├── hooks/
-├── context/
+├── provider/
+├── store/
 ├── models/
 ├── types/
 ├── utils/
+├── i18n/
 ├── constants/
 ├── theme/
 └── mocks/
+└── App.tsx
 ```
 
 ---
@@ -241,7 +245,7 @@ Seleção de Perfil
 └── Prefeitura
 ```
 
-Cada perfil possui seu próprio fluxo de navegação utilizando **Expo Router**.
+Cada perfil possui seu próprio fluxo de navegação utilizando **React Navigation**.
 
 ---
 

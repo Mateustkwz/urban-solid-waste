@@ -5,18 +5,20 @@
     "resolveJsonModule": true,
     "types": ["jest", "node"],
     "paths": {
-      "@app/*": ["./src/app/*"],
       "@models/*": ["./src/models/*"],
       "@repositories/*": ["./src/repositories/*"],
       "@services/*": ["./src/services/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@context/*": ["./src/context/*"],
+      "@provider/*": ["./src/provider/*"],
       "@storage/*": ["./src/storage/*"],
+      "@store/*": ["./src/store/*"],
       "@assets/*": ["./src/assets/*"],
       "@constants/*": ["./src/constants/*"],
+      "@screens/*": ["./src/screens/*"],
       "@components/*": ["./src/components/*"],
+      "@navigation/*": ["./src/navigation/*"],
       "@theme/*": ["./src/theme/*"],
-      "@types/*": ["./src/types/*"],
+      "@app-types/*": ["./src/types/*"],
       "@utils/*": ["./src/utils/*"],
       "@mocks/*": ["./src/mocks/*"]
     }
