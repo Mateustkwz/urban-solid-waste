@@ -67,7 +67,10 @@ const userAuthentication = async (
       throw new Error(createConflictError(errorMessages.userOrPasswordInvalid));
     }
 
-    return user;
+    return {
+      ...user,
+      password: undefined,
+    };
   }
 };
 
