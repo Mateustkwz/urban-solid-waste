@@ -3,7 +3,7 @@ import { enableScreens } from "react-native-screens";
 
 import "./i18n";
 
-import RootNavigator from "@navigation/RootNavigator";
+import { RootNavigator } from "@navigation/RootNavigator";
 
 enableScreens();
 

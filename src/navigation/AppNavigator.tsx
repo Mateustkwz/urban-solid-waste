@@ -1,10 +1,10 @@
 import { useAuthStore } from "@store/authStore";
 
-import AssociationNavigator from "./AssociationNavigator";
-import CitizenNavigator from "./CitizenNavigator";
-import CityHallNavigator from "./CityHallNavigator";
+import { AssociationNavigator } from "./AssociationNavigator";
+import { CitizenNavigator } from "./CitizenNavigator";
+import { CityHallNavigator } from "./CityHallNavigator";
 
-export default function AppNavigator() {
+export const AppNavigator = () => {
   const role = useAuthStore((state) => state.role);
 
   switch (role) {
@@ -20,4 +20,4 @@ export default function AppNavigator() {
     default:
       return null;
   }
-}
+};

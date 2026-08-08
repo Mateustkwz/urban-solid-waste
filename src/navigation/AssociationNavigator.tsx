@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
 
-export default function PopulationNavigator() {
+export const AssociationNavigator = () => {
   return (
     <Tab.Navigator>
       {/* <Tab.Screen name="Home" component={HomeScreen} />
@@ -13,4 +13,4 @@ export default function PopulationNavigator() {
       <Tab.Screen name="Test" component={() => <></>} />
     </Tab.Navigator>
   );
-}
+};

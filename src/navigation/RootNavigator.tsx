@@ -2,12 +2,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SplashScreen from "@screens/shared/SplashScreen";
 
-import AppNavigator from "./AppNavigator";
-import AuthNavigator from "./AuthNavigator";
+import { AppNavigator } from "./AppNavigator";
+import { AuthNavigator } from "./AuthNavigator";
 
 const Stack = createNativeStackNavigator();
 
-export default function RootNavigator() {
+export const RootNavigator = () => {
   const logged = false;
 
   return (
@@ -21,4 +21,4 @@ export default function RootNavigator() {
       )}
     </Stack.Navigator>
   );
-}
+};
