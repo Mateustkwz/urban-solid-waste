@@ -1,8 +1,4 @@
-enum UserRole {
-  CITIZEN = "CITIZEN",
-  ASSOCIATION = "ASSOCIATION",
-  CITY_HALL = "CITY_HALL",
-}
+import { UserRole } from "@constants/common";
 
 type User = {
   id: string;
@@ -15,4 +11,4 @@ type User = {
   points?: number;
 };
 
-export { User, UserRole };
+export { User };

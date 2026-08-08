@@ -1,4 +1,5 @@
-import { UserRole } from "@app-types/user.type";
+import { UserRole } from "@constants/common";
+
 interface UserModel {
   id: string;
   role: UserRole;

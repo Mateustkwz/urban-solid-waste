@@ -1,44 +1,29 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { User, UserRole } from "@app-types/user.type";
-import { textRoles } from "@constants/common";
-import {
-  createConflictError,
-  createNotFoundError,
-  errorMessages,
-} from "@constants/errors";
-import { UserSchema } from "@models/user.model";
+import { User } from "@app-types/user.type";
+import { UserRole, textRoles } from "@constants/common";
+import { createNotFoundError, errorMessages } from "@constants/errors";
+import userRepository from "@repositories/user.repository";
 
 const getUserByDocument = async (
   cpfOrCnpj: string,
   role: UserRole,
 ): Promise<User> => {
-  const data = await AsyncStorage.getItem(`@${role}`);
+  const user = await userRepository.getUserByDocument(cpfOrCnpj, role);
 
-  if (!data) {
+  if (!user) {
     throw new Error(
       createNotFoundError(errorMessages.getDataError + textRoles[role]),
     );
   }
 
-  const formatedData = JSON.parse(data) as UserSchema;
-
-  if (!formatedData[cpfOrCnpj]) {
-    throw new Error(createConflictError(errorMessages.userAlreadyExists));
-  }
-
-  const { id, address, email, name, password, cpf_or_cnpj, points } =
-    formatedData[cpfOrCnpj];
-
   return {
-    id,
-    address,
-    email,
-    name,
-    password,
+    id: user.id,
+    address: user.address,
+    email: user.email,
+    name: user.name,
+    password: user.password,
     role,
-    cpfOrCnpj: cpf_or_cnpj,
-    points,
+    cpfOrCnpj: user.cpf_or_cnpj,
+    points: user.points,
   };
 };
 
@@ -46,16 +31,30 @@ const checkExists = async (
   cpfOrCnpj: string,
   role: UserRole,
 ): Promise<boolean> => {
-  const data = await AsyncStorage.getItem(`@${role}`);
-
-  if (!data) {
-    return false;
-  }
-
-  const parsedData = JSON.parse(data) as UserSchema;
-
-  return parsedData[cpfOrCnpj] !== undefined;
+  return userRepository.checkExists(cpfOrCnpj, role);
 };
 
-export { checkExists, getUserByDocument };
+const getCurrentUser = async (): Promise<User | null> => {
+  return userRepository.getCurrentUser();
+};
 
+const saveCurrentUser = async (user: User): Promise<void> => {
+  return userRepository.saveCurrentUser(user);
+};
+
+const saveUser = async (user: User): Promise<void> => {
+  await userRepository.saveUser(user);
+};
+
+const removeCurrentUser = async (): Promise<void> => {
+  await userRepository.removeCurrentUser();
+};
+
+export default {
+  checkExists,
+  getCurrentUser,
+  getUserByDocument,
+  removeCurrentUser,
+  saveCurrentUser,
+  saveUser,
+};
