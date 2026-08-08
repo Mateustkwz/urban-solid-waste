@@ -1,17 +1,17 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Crypto from "expo-crypto";
 
-import { User, UserRole } from "@app-types/user.type";
+import { User } from "@app-types/user.type";
+import { UserRole } from "@constants/common";
 import {
   createBadRequestError,
   createConflictError,
   errorMessages,
 } from "@constants/errors";
 import { RegisterSchema } from "@models/schemas/auth.schema";
-import { UserSchema } from "@models/user.model";
+import authRepository from "@repositories/auth.repository";
 import { isValidCNPJ, isValidCPF } from "@utils/userValidation";
 
-import { checkExists, getUserByDocument } from "./user.service";
+import userService from "./user.service";
 
 const encryptPassword = async (password: string): Promise<string> => {
   return Crypto.digestStringAsync(
@@ -20,9 +20,9 @@ const encryptPassword = async (password: string): Promise<string> => {
   );
 };
 
-const createAccount = async (user: User) => {
+const createAccount = async (user: User): Promise<void> => {
   const schemaValidationResult = RegisterSchema(
-    user.role === "CITIZEN",
+    user.role === UserRole.CITIZEN,
   ).safeParse(user);
 
   if (!schemaValidationResult.success) {
@@ -31,47 +31,77 @@ const createAccount = async (user: User) => {
     );
   }
 
-  const exists = await checkExists(user.cpfOrCnpj, user.role);
+  const exists = await userService.checkExists(user.cpfOrCnpj, user.role);
 
   if (exists) {
     throw new Error(createConflictError(errorMessages.userAlreadyExists));
   }
 
-  await AsyncStorage.setItem(
-    `@${user.role}`,
-    JSON.stringify({
-      [user.cpfOrCnpj]: {
-        ...user,
-        id: Crypto.randomUUID(),
-        password: await encryptPassword(user.password),
-        cpf_or_cnpj: user.cpfOrCnpj,
-        role: user.role,
-      },
-    } as UserSchema),
-  );
+  const newUser: User = {
+    ...user,
+    id: Crypto.randomUUID(),
+    password: await encryptPassword(user.password),
+  };
+
+  await userService.saveUser(newUser);
+
+  const currentUser: User = {
+    ...newUser,
+    password: "",
+  };
+
+  await userService.saveCurrentUser(currentUser);
+
+  await authRepository.createSession(currentUser.id);
 };
 
 const userAuthentication = async (
   cpfOrCnpj: string,
   password: string,
   role: UserRole,
-) => {
-  if (isValidCPF(cpfOrCnpj) && isValidCNPJ(cpfOrCnpj)) {
-    const user = await getUserByDocument(cpfOrCnpj, role);
+): Promise<User> => {
+  const isValidDocument =
+    role === UserRole.CITIZEN ? isValidCPF(cpfOrCnpj) : isValidCNPJ(cpfOrCnpj);
 
-    if (!user) {
-      throw new Error(createConflictError(errorMessages.userNotFound));
-    }
-
-    if (user.password !== (await encryptPassword(password))) {
-      throw new Error(createConflictError(errorMessages.userOrPasswordInvalid));
-    }
-
-    return {
-      ...user,
-      password: undefined,
-    };
+  if (!isValidDocument) {
+    throw new Error(createConflictError(errorMessages.invalidDocument));
   }
+
+  const user = await userService.getUserByDocument(cpfOrCnpj, role);
+
+  if (user.password !== (await encryptPassword(password))) {
+    throw new Error(createConflictError(errorMessages.userOrPasswordInvalid));
+  }
+
+  const currentUser: User = {
+    ...user,
+    password: "",
+  };
+
+  await userService.saveCurrentUser(currentUser);
+  await authRepository.createSession(currentUser.id);
+
+  return currentUser;
 };
 
-export { createAccount, userAuthentication };
+const checkTokenValidity = async (userId: string): Promise<boolean> => {
+  const session = await authRepository.getSessionByUserId(userId);
+
+  if (!session) {
+    return false;
+  }
+
+  return Date.now() < session.expiration;
+};
+
+const logout = async (userId: string): Promise<void> => {
+  await authRepository.deleteSession(userId);
+  await userService.removeCurrentUser();
+};
+
+export default {
+  checkTokenValidity,
+  createAccount,
+  logout,
+  userAuthentication,
+};
