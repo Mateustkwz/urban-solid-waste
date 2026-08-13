@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 
-import { isValidCNPJ, isValidCPF } from "@utils/userValidation";
+import { isValidCNPJ, isValidCPF } from "@backend-utils/userValidation.util";
 
 export const RegisterSchema = (isCitizen: boolean) => {
   const validation = isCitizen

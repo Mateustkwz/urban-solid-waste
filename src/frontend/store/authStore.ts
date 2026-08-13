@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { User } from "@app-types/user.type";
+import { User } from "@backend-types/user.type";
 
 type AuthState = {
   isAuthenticated: boolean;

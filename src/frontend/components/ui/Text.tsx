@@ -1,12 +1,12 @@
 import {
-	Text as RNText,
-	StyleSheet,
-	type TextProps as RNTextProps,
+    Text as RNText,
+    StyleSheet,
+    type TextProps as RNTextProps,
 } from "react-native";
 
-import { useThemeColor } from "@hooks/useThemeColor";
-import type { Colors, TypographyVariant } from "@theme/index";
-import { Typography } from "@theme/index";
+import { useThemeColor } from "../hooks/useThemeColor";
+import type { Colors, TypographyVariant } from "../theme/index";
+import { Typography } from "../theme/index";
 
 export type TextProps = RNTextProps & {
   variant?: TypographyVariant;

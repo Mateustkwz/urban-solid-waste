@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { User } from "@app-types/user.type";
+import { User } from "@backend-types/user.type";
 import { UserRole } from "@constants/common";
-import { UserSchema } from "@models/user.model";
+import { UserSchema } from "../models/user.model";
 
 const getUserByDocument = async (
   cpfOrCnpj: string,

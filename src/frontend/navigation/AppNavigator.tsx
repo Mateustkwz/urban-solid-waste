@@ -1,4 +1,4 @@
-import { useAuthStore } from "@store/authStore";
+import { useAuthStore } from "../store/authStore";
 
 import { AssociationNavigator } from "./AssociationNavigator";
 import { CitizenNavigator } from "./CitizenNavigator";

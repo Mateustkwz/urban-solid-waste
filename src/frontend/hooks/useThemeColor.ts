@@ -1,4 +1,4 @@
-import { Colors } from "@theme/index";
+import { Colors } from "../theme/index";
 import { useColorScheme } from "./useColorSchema";
 
 type ColorName = keyof typeof Colors.light;

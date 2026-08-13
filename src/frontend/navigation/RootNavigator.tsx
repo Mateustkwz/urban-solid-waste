@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import SplashScreen from "@screens/shared/SplashScreen";
+import SplashScreen from "../frontend/screens/shared/SplashScreen";
 
 import { AppNavigator } from "./AppNavigator";
 import { AuthNavigator } from "./AuthNavigator";

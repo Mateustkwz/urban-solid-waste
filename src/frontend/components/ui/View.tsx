@@ -1,7 +1,7 @@
 import { View as RNView, type ViewProps as RNViewProps } from "react-native";
 
-import { useThemeColor } from "@hooks/useThemeColor";
-import { Colors } from "@theme/index";
+import { useThemeColor } from "../hooks/useThemeColor";
+import { Colors } from "../theme/index";
 
 export type ViewProps = RNViewProps & {
   background?: keyof typeof Colors.light;

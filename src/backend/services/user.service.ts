@@ -1,4 +1,4 @@
-import { User } from "@app-types/user.type";
+import { User } from "@backend-types/user.type";
 import { UserRole, textRoles } from "@constants/common";
 import { createNotFoundError, errorMessages } from "@constants/errors";
 import userRepository from "@repositories/user.repository";

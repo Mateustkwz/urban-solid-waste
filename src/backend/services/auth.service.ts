@@ -1,6 +1,7 @@
 import * as Crypto from "expo-crypto";
 
-import { User } from "@app-types/user.type";
+import { User } from "@backend-types/user.type";
+import { isValidCNPJ, isValidCPF } from "@backend-utils/userValidation.util";
 import { UserRole } from "@constants/common";
 import {
   createBadRequestError,
@@ -9,7 +10,6 @@ import {
 } from "@constants/errors";
 import { RegisterSchema } from "@models/schemas/auth.schema";
 import authRepository from "@repositories/auth.repository";
-import { isValidCNPJ, isValidCPF } from "@utils/userValidation";
 
 import userService from "./user.service";
 

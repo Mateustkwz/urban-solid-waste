@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { enableScreens } from "react-native-screens";
 
-import "./i18n";
+import "./frontend/i18n";
 
 import { RootNavigator } from "@navigation/RootNavigator";
 
