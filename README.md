@@ -156,14 +156,13 @@ A interface nunca acessa diretamente o AsyncStorage.
 
 ```text
 navigation/
-│
 ├── (auth)/
 │   ├── login.tsx
 │   ├── register.tsx
-│   └── _layout.tsx
+│   └── index.tsx
 │
 ├── (citizen)/
-│   ├── _layout.tsx
+│   ├── index.tsx
 │   ├── home/
 │   ├── deliveries/
 │   ├── rewards/
@@ -171,44 +170,45 @@ navigation/
 │   └── profile/
 │
 ├── (association)/
-│   ├── _layout.tsx
+│   ├── index.tsx
 │   ├── dashboard/
 │   ├── deliveries/
 │   └── profile/
 │
 ├── (cityhall)/
-│   ├── _layout.tsx
+│   ├── index.tsx
 │   ├── dashboard/
 │   ├── users/
 │   ├── information/
 │   └── profile/
 │
-└── _layout.tsx
+└── App.tsx
 
 src/
-│
-├── assets/
-├── components/
-│   ├── ui/
-│   ├── cards/
-│   ├── forms/
-│   ├── layout/
-│   └── feedback/
-│
-├── services/
-├── repositories/
-├── storage/
-├── hooks/
-├── provider/
-├── store/
-├── models/
-├── types/
-├── utils/
-├── i18n/
+├── __tests__/
+│   ├── backend/
+│   ├── frontend/
+│   ├── mocks/
 ├── constants/
-├── theme/
-└── mocks/
-└── App.tsx
+├── frontend/
+│   ├── assets/
+│   ├── components/
+│   ├── hooks/
+│   ├── i18n/
+│   ├── navigation/
+│   ├── screens/
+│   ├── services/
+│   ├── store/
+│   ├── theme/
+│   ├── types/
+│   └── utils/
+├── backend/
+    ├── models/
+    ├── repositories/
+    ├── services/
+    ├── storage/
+    ├── types/
+    └── utils/
 ```
 
 ---
