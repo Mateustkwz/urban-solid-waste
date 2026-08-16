@@ -4,4 +4,10 @@ const textRoles = {
   ASSOCIATION: "Associação de Catadores",
 };
 
-export { textRoles };
+enum UserRole {
+  CITIZEN = "CITIZEN",
+  ASSOCIATION = "ASSOCIATION",
+  CITY_HALL = "CITY_HALL",
+}
+
+export { textRoles, UserRole };
