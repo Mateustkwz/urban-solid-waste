@@ -19,7 +19,7 @@
       "@repositories/*": ["./src/backend/repositories/*"],
       "@services/*": ["./src/backend/services/*"],
       "@storage/*": ["./src/backend/storage/*"],
-      "@store/*": ["src/frontend/store/*"],
+      "@store/*": ["./src/frontend/store/*"],
       "@backend-types/*": ["./src/backend/types/*"],
       "@backend-utils/*": ["./src/backend/utils/*"]
     }
