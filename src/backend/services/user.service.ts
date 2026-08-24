@@ -1,18 +1,12 @@
 import { User } from "@backend-types/user.type";
-import { UserRole, textRoles } from "@constants/common";
 import { createNotFoundError, errorMessages } from "@constants/errors";
 import userRepository from "@repositories/user.repository";
 
-const getUserByDocument = async (
-  cpfOrCnpj: string,
-  role: UserRole,
-): Promise<User> => {
-  const user = await userRepository.getUserByDocument(cpfOrCnpj, role);
+const getUserByDocument = async (cpfOrCnpj: string): Promise<User> => {
+  const user = await userRepository.getUserByDocument(cpfOrCnpj);
 
   if (!user) {
-    throw new Error(
-      createNotFoundError(errorMessages.getDataError + textRoles[role]),
-    );
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
   }
 
   return {
@@ -21,17 +15,14 @@ const getUserByDocument = async (
     email: user.email,
     name: user.name,
     password: user.password,
-    role,
+    role: user.role,
     cpfOrCnpj: user.cpf_or_cnpj,
     points: user.points,
   };
 };
 
-const checkExists = async (
-  cpfOrCnpj: string,
-  role: UserRole,
-): Promise<boolean> => {
-  return userRepository.checkExists(cpfOrCnpj, role);
+const checkExists = async (cpfOrCnpj: string): Promise<boolean> => {
+  return userRepository.checkExists(cpfOrCnpj);
 };
 
 const getCurrentUser = async (): Promise<User | null> => {

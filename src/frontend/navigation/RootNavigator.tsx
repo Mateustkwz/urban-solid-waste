@@ -1,6 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useEffect, useState } from "react";
 
-import SplashScreen from "../frontend/screens/shared/SplashScreen";
+import SplashScreen from "@screens/SplashScreen";
+import { useAuthStore } from "@store/authStore";
 
 import { AppNavigator } from "./AppNavigator";
 import { AuthNavigator } from "./AuthNavigator";
@@ -8,16 +10,30 @@ import { AuthNavigator } from "./AuthNavigator";
 const Stack = createNativeStackNavigator();
 
 export const RootNavigator = () => {
-  const logged = false;
+  const { isAuthenticated } = useAuthStore();
+
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Splash" component={SplashScreen} />
-
-      {!logged ? (
-        <Stack.Screen name="Auth" component={AuthNavigator} />
+      {showSplash ? (
+        <Stack.Screen name="Splash" component={SplashScreen} />
       ) : (
-        <Stack.Screen name="App" component={AppNavigator} />
+        <>
+          {!isAuthenticated ? (
+            <Stack.Screen name="Auth" component={AuthNavigator} />
+          ) : (
+            <Stack.Screen name="App" component={AppNavigator} />
+          )}
+        </>
       )}
     </Stack.Navigator>
   );

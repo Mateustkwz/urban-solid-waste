@@ -1,14 +1,15 @@
 import { UserRole } from "@constants/common";
 
-interface UserModel {
+type User = {
   id: string;
   role: UserRole[];
   name: string;
-  cpf_or_cnpj: string;
+  cpfOrCnpj: string;
   address: string;
   email: string;
   password: string;
-  points: number;
-}
+  points?: number;
+  currentRole?: UserRole;
+};
 
-export { UserModel };
+export { User };

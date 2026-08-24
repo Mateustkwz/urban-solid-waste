@@ -20,13 +20,18 @@ export const RegisterSchema = (isCitizen: boolean) => {
         });
 
   return z.object({
-    id: z.string().uuid("ID inválido"),
     name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
     email: z.email("E-mail inválido"),
     cpfOrCnpj: validation,
-    address: z.string().min(5, "Endereço inválido"),
-    role: z.enum(["ASSOCIATION", "CITY_HALL", "CITIZEN"], "Role inválida"),
+    address: z.string().nullable(),
+    role: z.array(
+      z.enum(["ASSOCIATION", "CITY_HALL", "CITIZEN"], "Role inválida"),
+    ),
     password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
-    points: z.number().int().nonnegative("Pontos não podem ser negativos"),
+    points: z
+      .number()
+      .int()
+      .nonnegative("Pontos não podem ser negativos")
+      .nullable(),
   });
 };

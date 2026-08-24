@@ -76,10 +76,12 @@ const errorMessages = {
   getDataError: "Erro ao buscar informações na tabela de ",
   userNotFound: "Usuário não encontrado!",
   userOrPasswordInvalid: "Usuário ou senha inválidos!",
+  userNotRegistered: "Usuário não cadastrado!",
   invalidDocument: "Documento inválido!",
   sessionExpired: "Sessão expirada!",
   sessionNotFound: "Sessão não encontrada!",
   unauthorizedAccess: "Acesso não autorizado!",
+  internalServerError: "Erro interno no servidor!",
 };
 
 export {

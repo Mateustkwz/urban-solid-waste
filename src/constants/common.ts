@@ -1,7 +1,7 @@
 const textRoles = {
   CITIZEN: "População",
-  CITY_HALL: "Prefeitura",
   ASSOCIATION: "Associação de Catadores",
+  CITY_HALL: "Prefeitura",
 };
 
 enum UserRole {
