@@ -5,6 +5,10 @@ export const Radius = {
   lg: 12,
   xl: 16,
   xxl: 24,
+  xxxl: 32,
+  grand: 40,
+  huge: 48,
+  massive: 64,
   round: 999,
 } as const;
 

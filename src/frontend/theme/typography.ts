@@ -1,68 +1,107 @@
 export const Typography = {
   h1: {
+    fontFamily: "Nunito-Bold",
     fontSize: 32,
     lineHeight: 40,
-    fontWeight: "700",
   },
 
   h2: {
+    fontFamily: "Nunito-Bold",
     fontSize: 28,
     lineHeight: 36,
-    fontWeight: "700",
   },
 
   h3: {
+    fontFamily: "Nunito-Bold",
     fontSize: 24,
     lineHeight: 32,
-    fontWeight: "700",
   },
 
   subtitle: {
+    fontFamily: "Nunito-SemiBold",
     fontSize: 20,
     lineHeight: 28,
-    fontWeight: "600",
   },
 
   body: {
+    fontFamily: "Inter-Regular",
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: "400",
   },
 
   bodyMedium: {
+    fontFamily: "Inter-Medium",
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: "500",
   },
 
   bodySemiBold: {
+    fontFamily: "Inter-SemiBold",
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: "600",
   },
 
   bodySmall: {
+    fontFamily: "Inter-Regular",
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: "400",
   },
 
   caption: {
+    fontFamily: "Inter-Regular",
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: "400",
   },
 
   label: {
+    fontFamily: "Inter-SemiBold",
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: "600",
   },
 
   link: {
+    fontFamily: "Inter-Medium",
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: "500",
+  },
+} as const;
+
+export const Size = {
+  h1: {
+    fontSize: 32,
+    lineHeight: 40,
+  },
+  h2: {
+    fontSize: 28,
+    lineHeight: 36,
+  },
+  h3: {
+    fontSize: 24,
+    lineHeight: 32,
+  },
+  subtitle: {
+    fontSize: 20,
+    lineHeight: 28,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  bodySmall: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  caption: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  label: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  link: {
+    fontSize: 16,
+    lineHeight: 24,
   },
 } as const;
 
