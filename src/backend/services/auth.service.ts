@@ -6,6 +6,8 @@ import { UserRole } from "@constants/common";
 import {
   createBadRequestError,
   createConflictError,
+  createInternalServerError,
+  createNotFoundError,
   errorMessages,
 } from "@constants/errors";
 import { RegisterSchema } from "@models/schemas/auth.schema";
@@ -22,7 +24,7 @@ const encryptPassword = async (password: string): Promise<string> => {
 
 const createAccount = async (user: User): Promise<void> => {
   const schemaValidationResult = RegisterSchema(
-    user.role === UserRole.CITIZEN,
+    user.role[0] === UserRole.CITIZEN,
   ).safeParse(user);
 
   if (!schemaValidationResult.success) {
@@ -31,7 +33,7 @@ const createAccount = async (user: User): Promise<void> => {
     );
   }
 
-  const exists = await userService.checkExists(user.cpfOrCnpj, user.role);
+  const exists = await userService.checkExists(user.cpfOrCnpj);
 
   if (exists) {
     throw new Error(createConflictError(errorMessages.userAlreadyExists));
@@ -50,26 +52,37 @@ const createAccount = async (user: User): Promise<void> => {
     password: "",
   };
 
-  await userService.saveCurrentUser(currentUser);
-
-  await authRepository.createSession(currentUser.id);
+  try {
+    await userService.saveCurrentUser(currentUser);
+    await authRepository.createSession(currentUser.id);
+  } catch (error) {
+    throw new Error(
+      createInternalServerError(errorMessages.internalServerError + error),
+    );
+  }
 };
 
 const userAuthentication = async (
   cpfOrCnpj: string,
   password: string,
-  role: UserRole,
 ): Promise<User> => {
-  const isValidDocument =
-    role === UserRole.CITIZEN ? isValidCPF(cpfOrCnpj) : isValidCNPJ(cpfOrCnpj);
-
+  const isValidDocument = isValidCPF(cpfOrCnpj) || isValidCNPJ(cpfOrCnpj);
   if (!isValidDocument) {
     throw new Error(createConflictError(errorMessages.invalidDocument));
   }
 
-  const user = await userService.getUserByDocument(cpfOrCnpj, role);
+  let user: User | null = null;
 
-  if (user.password !== (await encryptPassword(password))) {
+  try {
+    user = await userService.getUserByDocument(cpfOrCnpj);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    if (!user) {
+      throw new Error(createNotFoundError(errorMessages.userNotRegistered));
+    }
+  }
+
+  if (user?.password !== (await encryptPassword(password))) {
     throw new Error(createConflictError(errorMessages.userOrPasswordInvalid));
   }
 
@@ -78,10 +91,19 @@ const userAuthentication = async (
     password: "",
   };
 
-  await userService.saveCurrentUser(currentUser);
   await authRepository.createSession(currentUser.id);
 
   return currentUser;
+};
+
+const userSelectRole = async (role: UserRole) => {
+  const user = await userService.getCurrentUser();
+
+  if (!user) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
+
+  await userService.saveCurrentUser({ ...user, currentRole: role });
 };
 
 const checkTokenValidity = async (userId: string): Promise<boolean> => {
@@ -104,4 +126,5 @@ export default {
   createAccount,
   logout,
   userAuthentication,
+  userSelectRole,
 };

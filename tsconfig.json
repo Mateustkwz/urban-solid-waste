@@ -17,7 +17,8 @@
       "@frontend-utils/*": ["./src/frontend/utils/*"],
       "@models/*": ["./src/backend/models/*"],
       "@repositories/*": ["./src/backend/repositories/*"],
-      "@services/*": ["./src/backend/services/*"],
+      "@backend-services/*": ["./src/backend/services/*"],
+      "@frontend-services/*": ["./src/frontend/services/*"],
       "@storage/*": ["./src/backend/storage/*"],
       "@store/*": ["./src/frontend/store/*"],
       "@backend-types/*": ["./src/backend/types/*"],
@@ -30,7 +31,8 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "src/__tests__/**/*.ts",
-    "jest.setup.ts"
+    "jest.setup.ts",
+    "babel.config.js"
   ],
   "ts-node": {
     "require": ["tsconfig-paths/register"]

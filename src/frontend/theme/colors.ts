@@ -1,59 +1,73 @@
 export const palette = {
-  primary: "#2E7D32",
+  primary: "#416F32",
+  primaryLight: "#5A8F48",
   secondary: "#66BB6A",
   accent: "#81C784",
+  componentBackground: "#E8F4E8",
 
-  background: "#F7F9F8",
+  background: "#F7F9F5",
   surface: "#FFFFFF",
+  transparent: "transparent",
 
-  text: "#1B1F1B",
-  textSecondary: "#5F6B61",
-
-  icon: "#6B756D",
+  text: "#1B1F1A",
+  textSecondary: "#5F685C",
+  icon: "#687263",
 
   success: "#43A047",
   warning: "#FFB300",
   error: "#D32F2F",
 
-  border: "#E1E7E2",
+  border: "#DDE5DA",
+  inputBackground: "#f1f1f1",
+
+  citizenBackground: "#E6F4EA", // verde claro
+  citizenIcon: "#2E7D32", // verde escuro
+  associationBackground: "#E6F0FA", // azul claro
+  associationIcon: "#1565C0", // azul médio
+  cityHallBackground: "#F3E8F9", // roxo claro
+  cityHallIcon: "#6A1B9A",
 } as const;
 
 export const Colors = {
   light: {
-    text: palette.text,
-    textSecondary: palette.textSecondary,
-
-    background: palette.background,
-    surface: palette.surface,
-
-    primary: palette.primary,
-    secondary: palette.secondary,
-    accent: palette.accent,
-
-    success: palette.success,
-    warning: palette.warning,
-    error: palette.error,
-
-    icon: palette.icon,
-    border: palette.border,
+    ...palette,
+    tint: palette.primary,
+    tabIconDefault: palette.icon,
+    tabIconSelected: palette.primary,
   },
 
   dark: {
-    text: "#E8F5E9",
-    textSecondary: "#B8C7B9",
+    primary: "#6FA85A",
+    primaryLight: "#82B96C",
+    secondary: "#81C784",
+    accent: "#A5D6A7",
+    componentBackground: "#E8F4E8",
 
-    background: "#121713",
-    surface: "#1B241D",
+    background: "#111711",
+    surface: "#1A211A",
 
-    primary: palette.secondary,
-    secondary: palette.primary,
-    accent: palette.accent,
+    text: "#F1F5EF",
+    textSecondary: "#B7C1B3",
+    icon: "#AAB5A6",
 
     success: "#66BB6A",
-    warning: "#FFCA28",
+    warning: "#FFCA4D",
     error: "#EF5350",
 
-    icon: "#AAB5AB",
-    border: "#303A32",
+    border: "#303A2F",
+
+    tint: "#6FA85A",
+    tabIconDefault: "#AAB5A6",
+    tabIconSelected: "#6FA85A",
+
+    inputBackground: "#3d3636",
+    transparent: palette.transparent,
+
+    citizenBackground: "rgba(46, 125, 50, 0.2)", // verde translúcido
+    citizenIcon: "#81C784", // verde claro
+    associationBackground: "rgba(21, 101, 192, 0.2)", // azul translúcido
+    associationIcon: "#64B5F6", // azul claro
+    cityHallBackground: "rgba(106, 27, 154, 0.2)", // roxo translúcido
+    cityHallIcon: "#BA68C8",
   },
 } as const;

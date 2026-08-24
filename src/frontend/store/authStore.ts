@@ -1,31 +1,34 @@
 import { create } from "zustand";
 
-import { User } from "@backend-types/user.type";
+import { UserRole } from "@constants/common";
+import { User } from "@frontend-types/user.type";
 
 type AuthState = {
   isAuthenticated: boolean;
-  name: string | null;
-  role: "CITIZEN" | "ASSOCIATION" | "CITY_HALL" | null;
+  user: User | null;
   login: (user: User) => void;
   logout: () => void;
+  currentRole: (currentUser: User, role: UserRole) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
-  name: null,
-  role: null,
+  user: null,
 
   login: (user: User) =>
     set({
       isAuthenticated: true,
-      name: user.name,
-      role: user.role,
+      user: user,
     }),
 
   logout: () =>
     set({
       isAuthenticated: false,
-      name: null,
-      role: null,
+      user: null,
+    }),
+
+  currentRole: (currentUser: User, role: UserRole) =>
+    set({
+      user: { ...currentUser, currentRole: role },
     }),
 }));

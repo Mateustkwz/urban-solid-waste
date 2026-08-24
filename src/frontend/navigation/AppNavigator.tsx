@@ -1,3 +1,5 @@
+import SelectRole from "@screens/SelectRole";
+
 import { useAuthStore } from "../store/authStore";
 
 import { AssociationNavigator } from "./AssociationNavigator";
@@ -5,9 +7,13 @@ import { CitizenNavigator } from "./CitizenNavigator";
 import { CityHallNavigator } from "./CityHallNavigator";
 
 export const AppNavigator = () => {
-  const role = useAuthStore((state) => state.role);
+  const { user, logout } = useAuthStore();
 
-  switch (role) {
+  if (!user) {
+    logout();
+  }
+
+  switch (user?.currentRole) {
     case "CITIZEN":
       return <CitizenNavigator />;
 
@@ -18,6 +24,6 @@ export const AppNavigator = () => {
       return <CityHallNavigator />;
 
     default:
-      return null;
+      return <SelectRole />;
   }
 };

@@ -1,14 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { User } from "@backend-types/user.type";
-import { UserRole } from "@constants/common";
-import { UserSchema } from "../models/user.model";
+import { delay } from "@backend-utils/common.util";
+import { UserModel } from "@models/user.model";
+import { UserSchema } from "@storage/user.storage";
 
 const getUserByDocument = async (
   cpfOrCnpj: string,
-  role: UserRole,
-): Promise<UserSchema[`${string}`] | null> => {
-  const data = await AsyncStorage.getItem(`@${role}`);
+): Promise<UserModel | null> => {
+  const data = await AsyncStorage.getItem("@user");
+
+  await delay();
 
   if (!data) {
     return null;
@@ -16,35 +18,39 @@ const getUserByDocument = async (
 
   const users = JSON.parse(data) as UserSchema;
 
-  return users[cpfOrCnpj] ?? null;
+  const user = users["@user"][cpfOrCnpj];
+
+  return user ?? null;
 };
 
-const checkExists = async (
-  cpfOrCnpj: string,
-  role: UserRole,
-): Promise<boolean> => {
-  const user = await getUserByDocument(cpfOrCnpj, role);
+const checkExists = async (cpfOrCnpj: string): Promise<boolean> => {
+  const user = await getUserByDocument(cpfOrCnpj);
+
+  await delay();
 
   return user !== null;
 };
 
 const saveUser = async (user: User) => {
-  const key = `@${user.role}`;
-  const data = await AsyncStorage.getItem(key);
+  const data = await AsyncStorage.getItem("@user");
 
-  const users = data ? (JSON.parse(data) as UserSchema) : {};
+  const users: UserSchema = data ? JSON.parse(data) : { "@user": {} };
 
-  users[user.cpfOrCnpj] = {
+  users["@user"][user.cpfOrCnpj] = {
     ...user,
     cpf_or_cnpj: user.cpfOrCnpj,
     points: user.points ?? 0,
   };
 
-  await AsyncStorage.setItem(key, JSON.stringify(users));
+  await AsyncStorage.setItem("@user", JSON.stringify(users));
+
+  await delay();
 };
 
 const getCurrentUser = async (): Promise<User | null> => {
   const data = await AsyncStorage.getItem("@currentUser");
+
+  await delay();
 
   if (!data) {
     return null;
@@ -55,10 +61,14 @@ const getCurrentUser = async (): Promise<User | null> => {
 
 const saveCurrentUser = async (user: User): Promise<void> => {
   await AsyncStorage.setItem("@currentUser", JSON.stringify(user));
+
+  await delay();
 };
 
 const removeCurrentUser = async (): Promise<void> => {
   await AsyncStorage.removeItem("@currentUser");
+
+  await delay();
 };
 
 export default {
