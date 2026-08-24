@@ -18,7 +18,7 @@ import {
   View,
 } from "@components/ui";
 import { textRoles, UserRole } from "@constants/common";
-import { register } from "@frontend-services/user.service";
+import { register } from "@frontend-services/auth.service";
 import { NavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCPF } from "@frontend-utils/userValidation.util";

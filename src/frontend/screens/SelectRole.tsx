@@ -9,11 +9,11 @@ import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
 export default function SelectRoleScreen() {
   const { t } = useTranslation();
-  const { user, currentRole } = useAuthStore();
+  const authStore = useAuthStore();
 
   const handleSelectRole = (role: UserRole) => {
-    if (user) {
-      currentRole(user, role);
+    if (authStore.user) {
+      authStore.setCurrentRole(authStore.user, role);
     }
   };
 
@@ -34,7 +34,7 @@ export default function SelectRoleScreen() {
       icon: "Building2",
     },
   ].filter((item) => {
-    if (user && user.role.includes(item.role)) {
+    if (authStore.user && authStore.user.role.includes(item.role)) {
       return true;
     }
 

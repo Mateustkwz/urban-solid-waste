@@ -92,6 +92,7 @@ const userAuthentication = async (
   };
 
   await authRepository.createSession(currentUser.id);
+  await userService.saveCurrentUser(currentUser);
 
   return currentUser;
 };

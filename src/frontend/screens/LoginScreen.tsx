@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "@components/ui";
-import { login } from "@frontend-services/user.service";
+import { login } from "@frontend-services/auth.service";
 import { NavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCNPJ, isValidCPF } from "@frontend-utils/userValidation.util";

@@ -1,5 +1,4 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
@@ -8,18 +7,6 @@ import { Colors, Radius, Spacing } from "@theme/index";
 
 export default function SplashScreen() {
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const bootstrap = async () => {
-      // TODO:
-      // - Load fonts
-      // - Seed AsyncStorage
-      // - Restore user session
-      // - Navigate to Auth or App
-    };
-
-    bootstrap();
-  }, []);
 
   return (
     <LinearGradient

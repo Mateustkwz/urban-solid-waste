@@ -1,6 +1,13 @@
 import { UserRole } from "@constants/common";
 
-type User = {
+interface UserRewards {
+  rewardId: string;
+  rescued: boolean;
+  rescuedDate: string;
+  rescuedTime: string;
+}
+
+interface User {
   id: string;
   role: UserRole[];
   name: string;
@@ -10,6 +17,7 @@ type User = {
   password: string;
   points?: number;
   currentRole?: UserRole;
-};
+  rewards?: UserRewards[];
+}
 
 export { User };

@@ -8,7 +8,7 @@ type AuthState = {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
-  currentRole: (currentUser: User, role: UserRole) => void;
+  setCurrentRole: (currentUser: User, role?: UserRole) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       user: null,
     }),
 
-  currentRole: (currentUser: User, role: UserRole) =>
+  setCurrentRole: (currentUser: User, role?: UserRole) =>
     set({
       user: { ...currentUser, currentRole: role },
     }),
