@@ -509,34 +509,38 @@ npx expo start --android
 
 ## Fase 1
 
-- Configuração do projeto
-- Tema visual
-- Navegação
-- Autenticação
+- Configuração do projeto ✅
+- AsyncStorage ✅
+- Tema visual ✅
 
 ## Fase 2
+
+- Navegação ✅
+- Autenticação ✅
+- Criação de conta ✅
+
+## Fase 3
 
 - Módulo da População
 - Informações
 - Recompensas
 - Entregas
 
-## Fase 3
+## Fase 4
 
 - Módulo da Associação
 - Confirmação de entregas
 - Crédito de pontos
 
-## Fase 4
+## Fase 5
 
 - Módulo da Prefeitura
 - Gerenciamento de usuários
 - Gerenciamento das informações
 
-## Fase 5
+## Fase 6
 
 - Dados simulados (Seed)
-- AsyncStorage
 - Refinamento da interface
 - Preparação para apresentação
 
