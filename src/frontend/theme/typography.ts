@@ -3,24 +3,28 @@ export const Typography = {
     fontFamily: "Nunito-Bold",
     fontSize: 32,
     lineHeight: 40,
+    fontWeight: 700,
   },
 
   h2: {
     fontFamily: "Nunito-Bold",
     fontSize: 28,
     lineHeight: 36,
+    fontWeight: 700,
   },
 
   h3: {
     fontFamily: "Nunito-Bold",
     fontSize: 24,
     lineHeight: 32,
+    fontWeight: 700,
   },
 
   subtitle: {
     fontFamily: "Nunito-SemiBold",
     fontSize: 20,
     lineHeight: 28,
+    fontWeight: 700,
   },
 
   body: {
@@ -67,6 +71,10 @@ export const Typography = {
 } as const;
 
 export const Size = {
+  huge: {
+    fontSize: 48,
+    lineHeight: 56,
+  },
   h1: {
     fontSize: 32,
     lineHeight: 40,

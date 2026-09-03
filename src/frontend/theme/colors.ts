@@ -20,12 +20,20 @@ export const palette = {
   border: "#DDE5DA",
   inputBackground: "#f1f1f1",
 
-  citizenBackground: "#E6F4EA", // verde claro
-  citizenIcon: "#2E7D32", // verde escuro
-  associationBackground: "#E6F0FA", // azul claro
-  associationIcon: "#1565C0", // azul médio
-  cityHallBackground: "#F3E8F9", // roxo claro
+  orange: "#F28C38",
+  orangeBackground: "#F5E9D7",
+  citizenBackground: "#E6F4EA",
+  citizenIcon: "#2E7D32",
+  associationBackground: "#E6F0FA",
+  associationIcon: "#1565C0",
+  cityHallBackground: "#F3E8F9",
   cityHallIcon: "#6A1B9A",
+  red: "#D32F2F",
+  redBackground: "#FDECEA",
+  yellow: "#FBC02D",
+  yellowBackground: "#FFF9E6",
+  brown: "#6D4C41",
+  brownBackground: "#F3EDEB",
 } as const;
 
 export const Colors = {

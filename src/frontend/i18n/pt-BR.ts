@@ -29,6 +29,21 @@ export default {
       about: "Sobre",
       and: "e",
       optional: "Opicional",
+      pts: "pts",
+      collect: "Coleta",
+      confirmed: "Confirmado",
+      collected: "Coletado",
+      delivery: "Entrega",
+      pending: "Pendente",
+      cancelled: "Cancelado",
+      schedulled: "agendada",
+    },
+    headerTab: {
+      Delivery: "Entregas",
+      Home: "Home",
+      Profile: "Perfil",
+      Info: "Info",
+      Rewards: "Recompensas",
     },
   },
   login: {
@@ -48,6 +63,14 @@ export default {
     title: "Como você vai usar?",
     subtitle: "Selecione o seu perfil de acesso",
     note: "Você poderá alterar isso nas configurações",
+  },
+  citizen: {
+    hello: "Olá, {{name}}! 👋",
+    goodDay: "Bom dia!",
+    yourPoints: "Seus pontos eco",
+    level: "🌱 Nível Eco Pro",
+    nextDelivery: "Próxima Coleta",
+    recentDeliveries: "Entregas Recentes",
   },
   error: {
     format: {

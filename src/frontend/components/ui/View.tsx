@@ -9,7 +9,7 @@ export type ViewProps = RNViewProps & {
 
 export const View = ({
   style,
-  background = "background",
+  background = "transparent",
   ...props
 }: ViewProps) => {
   const backgroundColor = useThemeColor(background);

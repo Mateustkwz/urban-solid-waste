@@ -7,16 +7,26 @@ interface UserRewards {
   rescued_time: string;
 }
 
+interface Adress {
+  street: string;
+  number: number;
+  zip_code: number;
+  complement: string;
+  city: string;
+  state: string;
+}
+
 interface UserModel {
   id: string;
   role: UserRole[];
   name: string;
   cpf_or_cnpj: string;
-  address: string;
   email: string;
   password: string;
   points: number;
   rewards?: UserRewards[];
+  address?: Adress;
 }
 
-export { UserModel };
+export { Adress, UserModel };
+

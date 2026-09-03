@@ -94,7 +94,7 @@ export default function RegisterScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
+        <View style={styles.header} background="background">
           <TouchableOpacity
             style={styles.backButton}
             backgroundColor="componentBackground"
@@ -123,7 +123,7 @@ export default function RegisterScreen() {
             <Icon name="Camera" size={Spacing.xl} color="primary" />
           </View>
 
-          <View style={styles.profileTextContainer} background="transparent">
+          <View style={styles.profileTextContainer}>
             <Text variant="bodySemiBold">{t("register.profilePhoto")}</Text>
 
             <Text variant="bodySmall" color="textSecondary">
@@ -132,7 +132,7 @@ export default function RegisterScreen() {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.form}>
+        <View style={styles.form} background="background">
           {/* Name */}
           <Controller
             control={control}
@@ -276,7 +276,7 @@ export default function RegisterScreen() {
         </View>
 
         {/* Terms */}
-        <View style={styles.footer}>
+        <View style={styles.footer} background="background">
           <TouchableOpacity
             style={styles.termsContainer}
             backgroundColor="componentBackground"

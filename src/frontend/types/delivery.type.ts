@@ -1,21 +1,16 @@
-interface DeliveryDate {
+type DeliveryDate = {
   date: string;
   start_time: string;
   end_time: string;
-}
+};
 
-export interface Delivery {
+export type DeliveryType = {
   id: string;
-  user_id: string;
   material: string[];
   quantity: number;
   unit: "kg" | "unit";
   method: "association" | "home";
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled";
   delivery_date: DeliveryDate;
-  created_at: string;
-  created_by: string;
-  updated_at: string;
-  updated_by: string;
   points?: number;
-}
+};

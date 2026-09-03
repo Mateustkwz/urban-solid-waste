@@ -1,21 +1,20 @@
 interface DeliveryDate {
   date: string;
-  start_time: string;
-  end_time: string;
+  startTime: string;
+  endTime: string;
 }
 
 export interface Delivery {
   id: string;
-  user_id: string;
+  userId: string;
   material: string[];
   quantity: number;
   unit: "kg" | "unit";
   method: "association" | "home";
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled";
-  delivery_date: DeliveryDate;
-  created_at: string;
-  created_by: string;
-  updated_at: string;
-  updated_by: string;
+  deliveryDate: DeliveryDate;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
   points?: number;
 }

@@ -64,7 +64,7 @@ export const TextInput = ({
           style={[styles.icon, styles.customIcon]}
           name={icon}
           color={iColor}
-          size={18}
+          size={20}
         />
       )}
       <RNTextInput
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   customIcon: {
     left: 12,
-    top: 42,
+    top: 40,
   },
   secureteIcon: {
     top: 38,

@@ -78,8 +78,8 @@ export default function LoginScreen() {
         style={styles.header}
         colors={["primary", "primaryLight"]}
       >
-        <View background="transparent" style={styles.dflex}>
-          <View background="transparent" style={styles.iconHeaderContainer}>
+        <View style={styles.dflex}>
+          <View style={styles.iconHeaderContainer}>
             <View style={styles.iconHeaderbackground} />
             <Icon
               name="Recycle"
@@ -97,7 +97,7 @@ export default function LoginScreen() {
         </Text>
       </LinearGradient>
 
-      <View style={styles.form}>
+      <View style={styles.form} background="background">
         <Text variant="h1" style={styles.formTitle}>
           {t("login.title")}
         </Text>
@@ -169,7 +169,7 @@ export default function LoginScreen() {
           </Text>
         </TouchableOpacity>
 
-        <View style={styles.lineContainer}>
+        <View style={styles.lineContainer} background="background">
           <View style={styles.line} background="border" />
           <Text
             variant="bodySmall"

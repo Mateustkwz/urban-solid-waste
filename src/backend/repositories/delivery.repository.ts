@@ -1,0 +1,1 @@
+const createDelivery = (delivery: Deliver) => {};
