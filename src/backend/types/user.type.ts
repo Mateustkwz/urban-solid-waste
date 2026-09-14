@@ -1,5 +1,5 @@
 import { UserRole } from "@constants/common";
-import { Adress } from "@models/user.model";
+import { Address } from "./common.type";
 
 interface UserRewards {
   rewardId: string;
@@ -15,7 +15,7 @@ interface User {
   cpfOrCnpj: string;
   email: string;
   password: string;
-  address?: Adress;
+  address?: Address[];
   points?: number;
   currentRole?: UserRole;
   rewards?: UserRewards[];

@@ -1,3 +1,4 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
@@ -61,7 +62,7 @@ export const DeliveryCard = ({ data }: { data: DeliveryType }) => {
         <View style={styles.dateAndPointsContainer}>
           <Icon name="Calendar" size={12} color="icon" />
           <Text variant="subtitle" color="icon" style={Size.caption}>
-            {formatDateShort(data.delivery_date.date)}
+            {formatDateShort(data.deliveryDate.date)}
           </Text>
           {data.points && (
             <View style={styles.pointsContainer}>

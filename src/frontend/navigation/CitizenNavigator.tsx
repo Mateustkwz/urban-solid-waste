@@ -1,14 +1,29 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import * as LucideIcons from "lucide-react-native";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "@components/ui";
 import { useThemeColor } from "@hooks/useThemeColor";
+import AboutScreen from "@screens/AboutScreen";
 import CitizenScreen from "@screens/CitizenScreen";
 import DeliveryScreen from "@screens/DeliveryScreen";
-import InfoScreen from "@screens/InfoScreen";
+import ProfileScreen from "@screens/ProfileScreen";
 import RewardScreen from "@screens/RewardScreen";
 import { Colors } from "@theme/colors";
-import { useTranslation } from "react-i18next";
+
+type TabParamList = {
+  Delivery: undefined;
+  Rewards: undefined;
+  Info: undefined;
+  Profile: undefined;
+  NewDeliveryScreen: undefined;
+};
+
+export type ProfileNavProp = BottomTabNavigationProp<TabParamList>;
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +45,9 @@ export const CitizenNavigator = () => {
               break;
             case "Rewards":
               iconName = "Gift";
+              break;
+            case "Profile":
+              iconName = "User";
               break;
             case "Info":
               iconName = "Info";
@@ -58,7 +76,7 @@ export const CitizenNavigator = () => {
           fontSize: 12,
           fontWeight: "700",
         },
-        tabBarLabel: t(`common.headerTab.${route.name}`),
+        tabBarLabel: t(`common.bottomTab.${route.name}`),
         headerTitle: t(`common.headerTab.${route.name}`),
       })}
     >
@@ -69,7 +87,12 @@ export const CitizenNavigator = () => {
       />
       <Tab.Screen name="Delivery" component={DeliveryScreen} />
       <Tab.Screen name="Rewards" component={RewardScreen} />
-      <Tab.Screen name="Info" component={InfoScreen} />
+      <Tab.Screen name="Info" component={AboutScreen} />
+      <Tab.Screen
+        name="Profile"
+        options={{ headerShown: false }}
+        component={ProfileScreen}
+      />
     </Tab.Navigator>
   );
 };

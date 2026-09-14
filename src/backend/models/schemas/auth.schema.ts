@@ -23,7 +23,6 @@ export const RegisterSchema = (isCitizen: boolean) => {
     name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
     email: z.email("E-mail inválido"),
     cpfOrCnpj: validation,
-    address: z.string().nullable(),
     role: z.array(
       z.enum(["ASSOCIATION", "CITY_HALL", "CITIZEN"], "Role inválida"),
     ),

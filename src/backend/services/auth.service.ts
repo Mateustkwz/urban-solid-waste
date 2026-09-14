@@ -45,7 +45,7 @@ const createAccount = async (user: User): Promise<void> => {
     password: await encryptPassword(user.password),
   };
 
-  await userService.saveUser(newUser);
+  await userService.createUser(newUser);
 
   const currentUser: User = {
     ...newUser,
@@ -65,7 +65,7 @@ const createAccount = async (user: User): Promise<void> => {
 const userAuthentication = async (
   cpfOrCnpj: string,
   password: string,
-): Promise<User> => {
+): Promise<{ user: User; token: string }> => {
   const isValidDocument = isValidCPF(cpfOrCnpj) || isValidCNPJ(cpfOrCnpj);
   if (!isValidDocument) {
     throw new Error(createConflictError(errorMessages.invalidDocument));
@@ -91,10 +91,10 @@ const userAuthentication = async (
     password: "",
   };
 
-  await authRepository.createSession(currentUser.id);
+  const session = await authRepository.createSession(currentUser.id);
   await userService.saveCurrentUser(currentUser);
 
-  return currentUser;
+  return { user: currentUser, token: session.token };
 };
 
 const userSelectRole = async (role: UserRole) => {

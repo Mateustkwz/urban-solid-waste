@@ -1,39 +1,42 @@
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 import {
-	Chip,
-	DeliveryCard,
-	Icon,
-	LinearGradient,
-	ProfilePicture,
-	Text,
-	View,
+  Chip,
+  DeliveryCard,
+  Icon,
+  LinearGradient,
+  ProfilePicture,
+  Text,
+  View,
 } from "@components/ui";
 import { materials } from "@constants/common";
 import { DeliveryType } from "@frontend-types/delivery.type";
 import { formatSchedule } from "@frontend-utils/date.util";
+import { getEcoLevel } from "@frontend-utils/points.util";
 import { useAuthStore } from "@store/authStore";
 import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
 export default function CitizenScreen() {
   const { t } = useTranslation();
   const { user } = useAuthStore();
-
-  const mockLastDelivery = formatSchedule({
-    date: "2026-08-20",
-    start_time: "08:00",
-    end_time: "12:00",
-  });
+  const navigation = useNavigation();
 
   const mockRecentDeliveries: DeliveryType[] = [
     {
       id: "2026-01",
       material: ["paper", "plastic"],
-      delivery_date: {
+      associationId: "user-001",
+      createdAt: "",
+      updatedAt: "",
+      updatedBy: "",
+      userId: "",
+      deliveryDate: {
         date: "2026-08-17",
-        start_time: "08:00",
-        end_time: "10:00",
+        startTime: "08:00",
+        endTime: "10:00",
       },
       quantity: 0.8,
       method: "home",
@@ -44,10 +47,15 @@ export default function CitizenScreen() {
     {
       id: "2026-02",
       material: ["paper", "plastic"],
-      delivery_date: {
+      associationId: "user-002",
+      createdAt: "",
+      updatedAt: "",
+      updatedBy: "",
+      userId: "",
+      deliveryDate: {
         date: "2026-08-29",
-        start_time: "10:00",
-        end_time: "12:00",
+        startTime: "10:00",
+        endTime: "12:00",
       },
       quantity: 0.8,
       method: "home",
@@ -56,6 +64,30 @@ export default function CitizenScreen() {
       points: 85,
     },
   ];
+
+  const nextDelivery = {
+    id: "2026-01",
+    material: ["paper", "plastic"],
+    associationId: "user-001",
+    createdAt: "",
+    updatedAt: "",
+    updatedBy: "",
+    userId: "",
+    deliveryDate: {
+      date: "2026-08-17",
+      startTime: "08:00",
+      endTime: "10:00",
+    },
+    quantity: 0.8,
+    method: "home",
+    unit: "kg",
+    status: "collected",
+    points: 85,
+  };
+
+  const handleProfile = () => {
+    navigation.navigate("Profile" as never);
+  };
 
   if (!user) {
     return null;
@@ -83,9 +115,12 @@ export default function CitizenScreen() {
               {t("citizen.goodDay")}
             </Text>
           </View>
-          <View style={styles.headerPicture}>
+          <TouchableOpacity
+            style={styles.headerPicture}
+            onPress={handleProfile}
+          >
             <ProfilePicture name={user.name} />
-          </View>
+          </TouchableOpacity>
         </LinearGradient>
         <LinearGradient
           style={styles.pointsContainer}
@@ -116,7 +151,9 @@ export default function CitizenScreen() {
               style={Size.bodySmall}
               color="background"
             >
-              {t("citizen.level")}
+              {t("citizen.level", {
+                level: getEcoLevel(user.points || 0).level,
+              })}
             </Text>
           </View>
         </LinearGradient>
@@ -135,12 +172,13 @@ export default function CitizenScreen() {
               <Text variant="h1" style={Size.body}>
                 {`${t("common.word.collect")} ${t("common.word.schedulled")}`}
               </Text>
-              <Text color="textSecondary" style={Size.label}>
-                {mockLastDelivery}
+              <Text color="textSecondary" style={Size.caption}>
+                {formatSchedule(nextDelivery.deliveryDate)}
               </Text>
               <View style={styles.nextDeliveryChipsContainer}>
-                <Chip {...materials.paper} />
-                <Chip {...materials.eletronic} />
+                {nextDelivery.material.map((material) => (
+                  <Chip key={material} {...materials[material]} />
+                ))}
               </View>
             </View>
           </View>

@@ -1,5 +1,7 @@
 import { UserRole } from "@constants/common";
 
+import { Address } from "./common.type";
+
 interface UserRewards {
   rewardId: string;
   rescued: boolean;
@@ -12,8 +14,8 @@ interface User {
   role: UserRole[];
   name: string;
   cpfOrCnpj: string;
-  address: string;
   email: string;
+  address?: Address[];
   password: string;
   points?: number;
   currentRole?: UserRole;

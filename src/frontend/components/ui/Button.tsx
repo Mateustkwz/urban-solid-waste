@@ -1,8 +1,9 @@
 // Button.tsx
+import React from "react";
 import {
-	StyleSheet,
-	TouchableOpacity,
-	type TouchableOpacityProps,
+  StyleSheet,
+  TouchableOpacity,
+  type TouchableOpacityProps,
 } from "react-native";
 
 import { useThemeColor } from "@hooks/useThemeColor";

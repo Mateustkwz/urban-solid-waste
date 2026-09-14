@@ -2,12 +2,12 @@ import { months, weekdays } from "@constants/common";
 
 const formatSchedule = ({
   date,
-  start_time,
-  end_time,
+  startTime,
+  endTime,
 }: {
   date: string;
-  start_time: string;
-  end_time: string;
+  startTime: string;
+  endTime: string;
 }): string => {
   const d = new Date(date);
 
@@ -21,7 +21,7 @@ const formatSchedule = ({
     return `${h}h${m}`;
   };
 
-  return `${weekday}, ${day} de ${month} • ${formatTime(start_time)} - ${formatTime(end_time)}`;
+  return `${weekday}, ${day} de ${month} • ${formatTime(startTime)} - ${formatTime(endTime)}`;
 };
 
 function formatDateShort(dateStr: string): string {
@@ -35,4 +35,3 @@ function formatDateShort(dateStr: string): string {
 }
 
 export { formatDateShort, formatSchedule };
-

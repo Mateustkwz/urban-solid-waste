@@ -11,6 +11,7 @@ export const palette = {
 
   text: "#1B1F1A",
   textSecondary: "#5F685C",
+  textLight: "#c5c5c5",
   icon: "#687263",
 
   success: "#43A047",
@@ -20,6 +21,7 @@ export const palette = {
   border: "#DDE5DA",
   inputBackground: "#f1f1f1",
 
+  darkRed: "#a33030",
   orange: "#F28C38",
   orangeBackground: "#F5E9D7",
   citizenBackground: "#E6F4EA",
@@ -56,6 +58,7 @@ export const Colors = {
 
     text: "#F1F5EF",
     textSecondary: "#B7C1B3",
+    textLight: "#ccd5c8",
     icon: "#AAB5A6",
 
     success: "#66BB6A",

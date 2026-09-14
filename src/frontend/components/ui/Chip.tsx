@@ -1,4 +1,5 @@
 import * as LucideIcons from "lucide-react-native";
+import React from "react";
 
 import { Colors, Size } from "@theme/index";
 
@@ -34,10 +35,8 @@ export const Chip = ({
       alignSelf: "flex-start",
     }}
   >
-    {Icon ? (
+    {icon && (
       <Icon name={icon as keyof typeof LucideIcons} size={16} color={color} />
-    ) : (
-      <></>
     )}
     <Text
       variant="caption"

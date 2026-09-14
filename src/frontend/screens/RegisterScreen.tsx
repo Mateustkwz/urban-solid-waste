@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -19,7 +19,7 @@ import {
 } from "@components/ui";
 import { textRoles, UserRole } from "@constants/common";
 import { register } from "@frontend-services/auth.service";
-import { NavigationProp } from "@frontend-types/navigation.type";
+import { AuthNavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCPF } from "@frontend-utils/userValidation.util";
 import { Colors, Radius, Spacing } from "@theme/index";
@@ -35,7 +35,7 @@ type RegisterFormData = {
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<AuthNavigationProp>();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -58,7 +58,7 @@ export default function RegisterScreen() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setLoading(true);
-
+      console.log(data);
       await register({
         id: "",
         name: data.name.trim(),
@@ -66,7 +66,6 @@ export default function RegisterScreen() {
         email: data.email.trim().toLowerCase(),
         password: data.password,
         role: [data.role],
-        address: "",
         points: data.role === "CITIZEN" ? 0 : undefined,
         currentRole: data.role,
       });
@@ -151,6 +150,7 @@ export default function RegisterScreen() {
                 placeholder="João Silva Magri"
                 value={value}
                 required
+                autoCapitalize="words"
                 iconColor="icon"
                 errorMessage={errors.name?.message}
                 onChangeText={(value) => {
@@ -248,6 +248,7 @@ export default function RegisterScreen() {
                 value={value}
                 required
                 iconColor="icon"
+                autoCapitalize="none"
                 errorMessage={errors.password?.message}
                 //   helperText={t("register.minimumPassword")}
                 onChangeText={(value) => {

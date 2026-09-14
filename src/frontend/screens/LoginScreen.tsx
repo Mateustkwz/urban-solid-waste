@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
@@ -13,8 +13,8 @@ import {
   TouchableOpacity,
   View,
 } from "@components/ui";
-import { login } from "@frontend-services/auth.service";
-import { NavigationProp } from "@frontend-types/navigation.type";
+import { login, saveToken } from "@frontend-services/auth.service";
+import { AuthNavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCNPJ, isValidCPF } from "@frontend-utils/userValidation.util";
 import { useAuthStore } from "@store/authStore";
@@ -27,7 +27,7 @@ type LoginFormData = {
 
 export default function LoginScreen() {
   const { t } = useTranslation();
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<AuthNavigationProp>();
   const authStore = useAuthStore();
   const [loading, setLoading] = useState(false);
 
@@ -49,13 +49,14 @@ export default function LoginScreen() {
 
       const response = await login(data.document, data.password);
 
-      if (!response.currentRole && response.role.length === 1) {
-        response.currentRole = response.role[0];
+      if (!response.user.currentRole && response.user.role.length === 1) {
+        response.user.currentRole = response.user.role[0];
       }
 
-      setLoading(false);
+      authStore.login(response.user);
+      await saveToken(response.token);
 
-      authStore.login(response);
+      setLoading(false);
     } catch (error) {
       showToast("error", t("error.title.login"), handleErrorMessage(error));
       setLoading(false);
@@ -146,6 +147,7 @@ export default function LoginScreen() {
               placeholder="••••••••"
               secureteIcon
               value={value}
+              autoCapitalize="none"
               errorMessage={errors.password?.message}
               onChangeText={(value) => {
                 onChange(value);

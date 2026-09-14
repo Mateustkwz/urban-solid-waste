@@ -5,6 +5,17 @@ type AuthStackParamList = {
   Register: undefined;
 };
 
-type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
+type AuthNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  "Login"
+>;
 
-export { NavigationProp };
+type AppStackParamList = {
+  Main: undefined;
+  NewDelivery: undefined;
+};
+
+type AppNavigationProp = NativeStackNavigationProp<AppStackParamList, "Main">;
+
+export { AppNavigationProp, AuthNavigationProp };
+

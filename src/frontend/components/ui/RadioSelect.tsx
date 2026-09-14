@@ -1,13 +1,19 @@
 import { useThemeColor } from "@hooks/useThemeColor";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  type ViewProps,
+} from "react-native";
 
 type Option = {
   label: string;
   value: string;
 };
 
-type RadioSelectProps = {
+type RadioSelectProps = ViewProps & {
   options: Option[];
   selected: string;
   onChange: (value: string) => void;
@@ -19,6 +25,7 @@ export const RadioSelect = ({
   selected,
   onChange,
   position = "vertical",
+  style,
 }: RadioSelectProps) => {
   const primary = useThemeColor("primary");
   const textColor = useThemeColor("text");
@@ -26,7 +33,11 @@ export const RadioSelect = ({
 
   return (
     <View
-      style={[styles.container, position === "horizontal" && styles.horizontal]}
+      style={[
+        styles.container,
+        position === "horizontal" && styles.horizontal,
+        style,
+      ]}
     >
       {options.map((opt) => (
         <TouchableOpacity

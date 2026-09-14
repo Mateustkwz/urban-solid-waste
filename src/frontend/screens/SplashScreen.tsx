@@ -1,4 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 

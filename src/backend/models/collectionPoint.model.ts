@@ -1,9 +1,9 @@
-import { Adress } from "./user.model";
+import { AddressModel } from "./common.model";
 
 export interface CollectionPoint {
   id: string;
   name: string;
-  address: Adress;
+  address: AddressModel;
   phone: string;
   opening_hours: string;
 }

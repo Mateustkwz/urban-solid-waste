@@ -1,16 +1,21 @@
 type DeliveryDate = {
   date: string;
-  start_time: string;
-  end_time: string;
+  startTime: string;
+  endTime: string;
 };
 
 export type DeliveryType = {
   id: string;
+  userId: string;
+  associationId: string;
   material: string[];
   quantity: number;
   unit: "kg" | "unit";
   method: "association" | "home";
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled";
-  delivery_date: DeliveryDate;
+  deliveryDate: DeliveryDate;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
   points?: number;
 };

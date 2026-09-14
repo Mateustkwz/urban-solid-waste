@@ -1,4 +1,5 @@
 // Modal.tsx
+import React from "react";
 import {
   Modal as RNModal,
   StyleSheet,
@@ -50,8 +51,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
-    width: "80%",
+    width: "90%",
     borderRadius: 12,
     padding: 16,
+    overflowY: "scroll",
   },
 });

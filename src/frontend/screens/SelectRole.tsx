@@ -1,4 +1,5 @@
 import * as LucideIcons from "lucide-react-native";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 

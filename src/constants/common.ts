@@ -17,6 +17,14 @@ const textRoles = {
   CITY_HALL: "Prefeitura",
 };
 
+const materialUnit = {
+  kg: "Kg",
+  unit: "Unidade",
+};
+
+const aboutText =
+  "Este Aplicativo é o fruto do Trabalho de Conclusão Curso do aluno Hilário José Pereira Neto, estudante da UTFPR - Universidade Tecnológica Federal do Paraná, para obtenção do titulo de Baracharel em Engenharia Eletronica. A ideia surgiu da motivação em propor uma solução que unisse os conhecimentos de tecnologia da informação com Logistica Reversa para melhorar os indices de reciclagem das cidades e promover uma melhor consciencia ambiental para a população";
+
 const materials: MaterialType = {
   paper: {
     label: "Papel",
@@ -80,10 +88,21 @@ const months = [
   "Dezembro",
 ];
 
+type AddressType = "RESIDENTIAL" | "COLLECTION_POINT" | "CITY_HALL";
+
 enum UserRole {
   CITIZEN = "CITIZEN",
   ASSOCIATION = "ASSOCIATION",
   CITY_HALL = "CITY_HALL",
 }
 
-export { materials, months, textRoles, UserRole, weekdays };
+export {
+  aboutText, AddressType,
+  materials,
+  materialUnit,
+  months,
+  textRoles,
+  UserRole,
+  weekdays
+};
+

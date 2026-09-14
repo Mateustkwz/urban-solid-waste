@@ -4,9 +4,10 @@ interface DeliveryDate {
   end_time: string;
 }
 
-export interface Delivery {
+export interface DeliveryModel {
   id: string;
   user_id: string;
+  association_id: string;
   material: string[];
   quantity: number;
   unit: "kg" | "unit";

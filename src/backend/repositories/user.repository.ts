@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "@backend-types/user.type";
 import { delay } from "@backend-utils/common.util";
 import { searchUserById } from "@backend-utils/userData.util";
+import { UserRole } from "@constants/common";
+import { AddressModel } from "@models/common.model";
 import { UserModel } from "@models/user.model";
 import { UserSchema } from "@storage/user.storage";
 
@@ -44,7 +46,7 @@ const checkExists = async (cpfOrCnpj: string): Promise<boolean> => {
   return user !== null;
 };
 
-const saveUser = async (user: User, points = 0) => {
+const createUser = async (user: User, points = 0) => {
   const data = await AsyncStorage.getItem("@user");
 
   const users: UserSchema = data ? JSON.parse(data) : { "@user": {} };
@@ -54,6 +56,7 @@ const saveUser = async (user: User, points = 0) => {
     cpf_or_cnpj: user.cpfOrCnpj,
     points: points,
     rewards: [],
+    address: [],
   };
 
   await AsyncStorage.setItem("@user", JSON.stringify(users));
@@ -130,14 +133,78 @@ const updateUserPoints = async (
   return true;
 };
 
+const getAssociations = async () => {
+  const data = await AsyncStorage.getItem("@user");
+
+  await delay();
+
+  if (!data) {
+    return [];
+  }
+
+  const users: UserSchema = JSON.parse(data);
+
+  const associations = Object.values(users["@user"]).filter((user) =>
+    user.role.includes("ASSOCIATION" as UserRole),
+  );
+
+  return associations;
+};
+
+const getCityHall = async () => {
+  const data = await AsyncStorage.getItem("@user");
+
+  await delay();
+
+  if (!data) {
+    return null;
+  }
+
+  const users: UserSchema = JSON.parse(data);
+
+  const cityHall = Object.values(users["@user"]).find((user) =>
+    user.role.includes("CITY_HALL" as UserRole),
+  );
+
+  return cityHall ?? null;
+};
+
+const updateAddress = async (user: UserModel, address: AddressModel[]) => {
+  const data = await AsyncStorage.getItem("@user");
+
+  const users: UserSchema = JSON.parse(data as string);
+
+  users["@user"][user.cpf_or_cnpj].address = address;
+
+  await AsyncStorage.setItem("@user", JSON.stringify(users));
+
+  await delay();
+};
+
+const deleteAddresses = async (user: UserModel) => {
+  const data = await AsyncStorage.getItem("@user");
+
+  const users: UserSchema = JSON.parse(data as string);
+
+  users["@user"][user.cpf_or_cnpj].address = [];
+
+  await AsyncStorage.setItem("@user", JSON.stringify(users));
+
+  await delay();
+};
+
 export default {
   checkExists,
   getCurrentUser,
+  getAssociations,
+  getCityHall,
   getUserById,
   getUserPoints,
   getUserByDocument,
   updateUserPoints,
   removeCurrentUser,
   saveCurrentUser,
-  saveUser,
+  createUser,
+  updateAddress,
+  deleteAddresses,
 };

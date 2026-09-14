@@ -1,5 +1,6 @@
 import Toast from "react-native-toast-message";
 
+import { AddressType } from "@constants/common";
 import { MappedError } from "@constants/errors";
 
 const showToast = (
@@ -17,9 +18,21 @@ const showToast = (
 
 const handleErrorMessage = (error: unknown) => {
   const customError = error as MappedError;
+
   const message = JSON.parse(customError.message) as MappedError;
 
   return message.message;
 };
 
-export { handleErrorMessage, showToast };
+const getAddressType = (userRole?: string): AddressType => {
+  switch (userRole) {
+    case "CITIZEN":
+      return "RESIDENTIAL";
+    case "ASSOCIATION":
+      return "COLLECTION_POINT";
+    default:
+      return "CITY_HALL";
+  }
+};
+
+export { getAddressType, handleErrorMessage, showToast };

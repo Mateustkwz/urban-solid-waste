@@ -7,6 +7,7 @@ interface DeliveryDate {
 export interface Delivery {
   id: string;
   userId: string;
+  associationId: string;
   material: string[];
   quantity: number;
   unit: "kg" | "unit";
