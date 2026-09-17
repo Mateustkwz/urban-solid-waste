@@ -74,11 +74,20 @@ export const Colors = {
     inputBackground: "#3d3636",
     transparent: palette.transparent,
 
+    darkRed: "#781616",
+    orange: "#bf671f",
+    orangeBackground: "#f5c689",
     citizenBackground: "rgba(46, 125, 50, 0.2)", // verde translúcido
     citizenIcon: "#81C784", // verde claro
     associationBackground: "rgba(21, 101, 192, 0.2)", // azul translúcido
     associationIcon: "#64B5F6", // azul claro
     cityHallBackground: "rgba(106, 27, 154, 0.2)", // roxo translúcido
     cityHallIcon: "#BA68C8",
+    red: "#a01818",
+    redBackground: "#f8a9a0",
+    yellow: "#b78d22",
+    yellowBackground: "#f9dd7e",
+    brown: "#68392a",
+    brownBackground: "#b2958b",
   },
 } as const;

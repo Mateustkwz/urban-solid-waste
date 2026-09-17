@@ -13,6 +13,9 @@ const createDelivery = async (delivery: DeliveryModel) => {
   deliveries["@delivery"][delivery.id] = delivery;
 
   await AsyncStorage.setItem(`@delivery`, JSON.stringify(deliveries));
+  await delay();
+
+  return deliveries["@delivery"];
 };
 
 const updateDelivery = async (delivery: DeliveryModel) => {
@@ -27,6 +30,8 @@ const updateDelivery = async (delivery: DeliveryModel) => {
   await AsyncStorage.setItem("@delivery", JSON.stringify(deliveries));
 
   await delay();
+
+  return deliveries["@delivery"];
 };
 
 const getDelivery = async () => {
@@ -37,6 +42,7 @@ const getDelivery = async () => {
   }
 
   const deliveries: DeliverySchema = JSON.parse(data);
+  await delay();
 
   return deliveries["@delivery"];
 };
@@ -51,6 +57,7 @@ const deleteDeliveryById = async (deliveryId: string) => {
   const deliveries: DeliverySchema = JSON.parse(data);
 
   delete deliveries["@delivery"][deliveryId];
+  await delay();
 
   await AsyncStorage.setItem("@delivery", JSON.stringify(deliveries));
 };

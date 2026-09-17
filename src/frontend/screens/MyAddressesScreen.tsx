@@ -14,13 +14,13 @@ import { getUserAddresses } from "@frontend-services/user.service";
 import { Address } from "@frontend-types/common.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { AppNavProp } from "@navigation/AppNavigator";
-import { useAuthStore } from "@store/authStore";
+import { useUserStore } from "@store/userStore";
 import { Radius } from "@theme/radius";
 import { Spacing } from "@theme/spacing";
 
 export default function MyAddressesScreen() {
   const { t } = useTranslation();
-  const { user, updateAddresses, addresses } = useAuthStore();
+  const { user, updateAddresses, addresses } = useUserStore();
   const navigation = useNavigation<AppNavProp>();
 
   const handleNewAddress = (data?: Address) => {

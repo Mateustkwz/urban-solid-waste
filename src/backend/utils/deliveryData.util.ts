@@ -1,6 +1,10 @@
 import { Delivery } from "@backend-types/delivery.type";
 import { DeliveryModel } from "@models/delivery.model";
 import { DeliverySchema } from "@storage/delivery.storage";
+import {
+  convertAddressDataToModel,
+  convertAddressModelToData,
+} from "./userData.util";
 
 export const searchDeliveriesByUserId = (
   deliveryData: string,
@@ -15,7 +19,7 @@ export const searchDeliveriesByUserId = (
   return delivery ? { ...delivery[1] } : null;
 };
 
-export const transformDeliveryData = (delivery: DeliveryModel): Delivery => {
+export const toDeliveryData = (delivery: DeliveryModel): Delivery => {
   return {
     id: delivery.id,
     userId: delivery.user_id,
@@ -30,6 +34,8 @@ export const transformDeliveryData = (delivery: DeliveryModel): Delivery => {
       startTime: delivery.delivery_date.start_time,
       endTime: delivery.delivery_date.end_time,
     },
+    address: convertAddressModelToData([delivery.address])[0],
+    createdBy: delivery.created_by,
     createdAt: delivery.created_at,
     updatedAt: delivery.updated_at,
     updatedBy: delivery.updated_by,
@@ -37,7 +43,7 @@ export const transformDeliveryData = (delivery: DeliveryModel): Delivery => {
   };
 };
 
-export const transformDeliveryDataToModel = (
+export const toDeliveryModel = (
   delivery: Delivery,
   createdBy: string,
 ): DeliveryModel => {
@@ -55,6 +61,7 @@ export const transformDeliveryDataToModel = (
       start_time: delivery.deliveryDate.startTime,
       end_time: delivery.deliveryDate.endTime,
     },
+    address: convertAddressDataToModel([delivery.address])[0],
     created_at: delivery.createdAt,
     created_by: createdBy,
     updated_at: delivery.updatedAt,

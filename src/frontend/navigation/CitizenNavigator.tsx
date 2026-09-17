@@ -23,7 +23,7 @@ type TabParamList = {
   NewDeliveryScreen: undefined;
 };
 
-export type ProfileNavProp = BottomTabNavigationProp<TabParamList>;
+export type CitizenNavProp = BottomTabNavigationProp<TabParamList>;
 
 const Tab = createBottomTabNavigator();
 
@@ -86,7 +86,11 @@ export const CitizenNavigator = () => {
         component={CitizenScreen}
       />
       <Tab.Screen name="Delivery" component={DeliveryScreen} />
-      <Tab.Screen name="Rewards" component={RewardScreen} />
+      <Tab.Screen
+        name="Rewards"
+        options={{ headerShown: false }}
+        component={RewardScreen}
+      />
       <Tab.Screen name="Info" component={AboutScreen} />
       <Tab.Screen
         name="Profile"

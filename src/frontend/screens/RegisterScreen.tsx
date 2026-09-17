@@ -58,7 +58,7 @@ export default function RegisterScreen() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setLoading(true);
-      console.log(data);
+
       await register({
         id: "",
         name: data.name.trim(),

@@ -31,49 +31,51 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
         <Text style={styles.fieldText}>{value || "Selecione um horário"}</Text>
       </TouchableOpacity>
 
-      <Modal visible={open} transparent animationType="fade">
-        <View style={styles.overlay}>
-          <View style={styles.pickerContainer}>
-            <Text style={styles.title}>Escolha o horário</Text>
-            <View style={styles.pickersRow}>
-              <Picker
-                selectedValue={hour}
-                style={styles.picker}
-                onValueChange={(val) => setHour(val)}
-              >
-                {Array.from({ length: 22 }, (_, i) => (
-                  <Picker.Item
-                    key={i}
-                    label={String(i).padStart(2, "0")}
-                    value={i}
-                  />
-                ))}
-              </Picker>
-              <Picker
-                selectedValue={minute}
-                style={styles.picker}
-                onValueChange={(val) => setMinute(val)}
-              >
-                <Picker.Item label="00" value={0} />
-                <Picker.Item label="30" value={30} />
-              </Picker>
-            </View>
+      {open && (
+        <Modal visible={open} transparent animationType="fade">
+          <View style={styles.overlay}>
+            <View style={styles.pickerContainer}>
+              <Text style={styles.title}>Escolha o horário</Text>
+              <View style={styles.pickersRow}>
+                <Picker
+                  selectedValue={hour}
+                  style={styles.picker}
+                  onValueChange={(val) => setHour(Number(val))}
+                >
+                  {Array.from({ length: 22 }, (_, i) => (
+                    <Picker.Item
+                      key={i}
+                      label={String(i).padStart(2, "0")}
+                      value={i}
+                    />
+                  ))}
+                </Picker>
+                <Picker
+                  selectedValue={minute}
+                  style={styles.picker}
+                  onValueChange={(val) => setMinute(val)}
+                >
+                  <Picker.Item label="00" value={0} />
+                  <Picker.Item label="30" value={30} />
+                </Picker>
+              </View>
 
-            <TouchableOpacity
-              style={styles.confirmButton}
-              onPress={handleConfirm}
-            >
-              <Text style={styles.confirmText}>Confirmar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setOpen(false)}
-            >
-              <Text style={styles.closeText}>Cancelar</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={handleConfirm}
+              >
+                <Text style={styles.confirmText}>Confirmar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setOpen(false)}
+              >
+                <Text style={styles.closeText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
     </View>
   );
 };

@@ -3,6 +3,7 @@ import { User } from "@backend-types/user.type";
 import { AddressModel } from "@models/common.model";
 import { UserModel } from "@models/user.model";
 import { UserSchema } from "@storage/user.storage";
+import { toRewardData, toRewardModel } from "./rewardData.util";
 
 export const searchUserById = (userData: string, userId: string) => {
   const users = JSON.parse(userData) as UserSchema;
@@ -17,7 +18,10 @@ export const searchUserById = (userData: string, userId: string) => {
 export const convertUserDataToModel = (user: User): UserModel => {
   return {
     id: user.id,
-    address: user.address ? convertAddressDataToModel(user.address) : undefined,
+    address: user.address ? convertAddressDataToModel(user.address) : [],
+    rewards: user.rewards
+      ? user.rewards.map((item) => toRewardModel(item))
+      : [],
     email: user.email,
     name: user.name,
     password: user.password,
@@ -30,7 +34,8 @@ export const convertUserDataToModel = (user: User): UserModel => {
 export const convertUserModelToData = (user: UserModel): User => {
   return {
     id: user.id,
-    address: user.address ? convertAddressModelToData(user.address) : undefined,
+    address: user.address ? convertAddressModelToData(user.address) : [],
+    rewards: user.rewards ? user.rewards.map((item) => toRewardData(item)) : [],
     email: user.email,
     name: user.name,
     password: user.password,

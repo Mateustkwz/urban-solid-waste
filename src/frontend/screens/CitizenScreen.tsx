@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -16,77 +16,36 @@ import { materials } from "@constants/common";
 import { DeliveryType } from "@frontend-types/delivery.type";
 import { formatSchedule } from "@frontend-utils/date.util";
 import { getEcoLevel } from "@frontend-utils/points.util";
-import { useAuthStore } from "@store/authStore";
+import { AppNavProp } from "@navigation/AppNavigator";
+import { CitizenNavProp } from "@navigation/CitizenNavigator";
+import { useDeliveryStore } from "@store/deliveryStore";
+import { useUserStore } from "@store/userStore";
 import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
 export default function CitizenScreen() {
   const { t } = useTranslation();
-  const { user } = useAuthStore();
-  const navigation = useNavigation();
+  const { user } = useUserStore();
+  const { deliveries } = useDeliveryStore();
+  const appNavigation = useNavigation<AppNavProp>();
+  const citizenNavigation = useNavigation<CitizenNavProp>();
 
-  const mockRecentDeliveries: DeliveryType[] = [
-    {
-      id: "2026-01",
-      material: ["paper", "plastic"],
-      associationId: "user-001",
-      createdAt: "",
-      updatedAt: "",
-      updatedBy: "",
-      userId: "",
-      deliveryDate: {
-        date: "2026-08-17",
-        startTime: "08:00",
-        endTime: "10:00",
-      },
-      quantity: 0.8,
-      method: "home",
-      unit: "kg",
-      status: "collected",
-      points: 85,
-    },
-    {
-      id: "2026-02",
-      material: ["paper", "plastic"],
-      associationId: "user-002",
-      createdAt: "",
-      updatedAt: "",
-      updatedBy: "",
-      userId: "",
-      deliveryDate: {
-        date: "2026-08-29",
-        startTime: "10:00",
-        endTime: "12:00",
-      },
-      quantity: 0.8,
-      method: "home",
-      unit: "kg",
-      status: "pending",
-      points: 85,
-    },
-  ];
-
-  const nextDelivery = {
-    id: "2026-01",
-    material: ["paper", "plastic"],
-    associationId: "user-001",
-    createdAt: "",
-    updatedAt: "",
-    updatedBy: "",
-    userId: "",
-    deliveryDate: {
-      date: "2026-08-17",
-      startTime: "08:00",
-      endTime: "10:00",
-    },
-    quantity: 0.8,
-    method: "home",
-    unit: "kg",
-    status: "collected",
-    points: 85,
-  };
+  const deliveredOnes = useMemo(
+    () => deliveries.filter((deliv) => deliv.status === "collected"),
+    [deliveries],
+  );
+  const userTotalPoints = useMemo(
+    () =>
+      (user?.points || 0) +
+      deliveredOnes.reduce((prev, next) => prev + (next.points || 0), 0),
+    [user, deliveredOnes],
+  );
 
   const handleProfile = () => {
-    navigation.navigate("Profile" as never);
+    citizenNavigation.navigate("Profile");
+  };
+
+  const handleEditDelivery = (delivery: DeliveryType) => {
+    appNavigation.navigate("DeliveryForm", { delivery });
   };
 
   if (!user) {
@@ -139,7 +98,7 @@ export default function CitizenScreen() {
           </Text>
           <View style={styles.pointsTextContainer}>
             <Text style={Size.huge} variant="h1" color="background">
-              {new Intl.NumberFormat("pt-br").format(user.points || 0)}
+              {new Intl.NumberFormat("pt-br").format(userTotalPoints || 0)}
             </Text>
             <Text variant="bodyMedium" style={styles.pts} color="background">
               {t("common.word.pts")}
@@ -152,47 +111,52 @@ export default function CitizenScreen() {
               color="background"
             >
               {t("citizen.level", {
-                level: getEcoLevel(user.points || 0).level,
+                level: getEcoLevel(userTotalPoints || 0).level,
               })}
             </Text>
           </View>
         </LinearGradient>
-        <View style={styles.contentContainer}>
-          <Text variant="h2" style={Size.body}>
-            {t("citizen.nextDelivery")}
-          </Text>
-          <View
-            style={styles.nextDeliveryContainer}
-            background="componentBackground"
-          >
-            <View style={styles.nextDeliveryIcon} background="primary">
-              <Icon name="Truck" />
-            </View>
-            <View style={styles.nextDeliveryContent}>
-              <Text variant="h1" style={Size.body}>
-                {`${t("common.word.collect")} ${t("common.word.schedulled")}`}
-              </Text>
-              <Text color="textSecondary" style={Size.caption}>
-                {formatSchedule(nextDelivery.deliveryDate)}
-              </Text>
-              <View style={styles.nextDeliveryChipsContainer}>
-                {nextDelivery.material.map((material) => (
-                  <Chip key={material} {...materials[material]} />
-                ))}
+        {deliveries.length && (
+          <View style={styles.contentContainer}>
+            <Text variant="h2" style={Size.body}>
+              {t("citizen.nextDelivery")}
+            </Text>
+
+            <View
+              style={styles.nextDeliveryContainer}
+              background="componentBackground"
+            >
+              <View style={styles.nextDeliveryIcon} background="primary">
+                <Icon name="Truck" />
+              </View>
+              <View style={styles.nextDeliveryContent}>
+                <Text variant="h1" style={Size.body}>
+                  {`${t("common.word.collect")} ${t("common.word.schedulled")}`}
+                </Text>
+                <Text color="textSecondary" style={Size.caption}>
+                  {formatSchedule(deliveries[0].deliveryDate)}
+                </Text>
+                <View style={styles.nextDeliveryChipsContainer}>
+                  {deliveries[0].material.map((material) => (
+                    <Chip key={material} {...materials[material]} />
+                  ))}
+                </View>
               </View>
             </View>
-          </View>
-          {mockRecentDeliveries.length && (
             <View style={styles.recentDeliveriesContainer}>
               <Text variant="h2" style={Size.body}>
                 {t("citizen.recentDeliveries")}
               </Text>
-              {mockRecentDeliveries.map((delivery) => (
-                <DeliveryCard key={delivery.id} data={delivery} />
+              {deliveries.map((delivery) => (
+                <DeliveryCard
+                  key={delivery.id}
+                  data={delivery}
+                  handleDelivery={handleEditDelivery}
+                />
               ))}
             </View>
-          )}
-        </View>
+          </View>
+        )}
       </View>
     </ScrollView>
   );

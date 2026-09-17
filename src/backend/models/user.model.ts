@@ -1,12 +1,6 @@
 import { UserRole } from "@constants/common";
 import { AddressModel } from "./common.model";
-
-interface UserRewards {
-  reward_id: string;
-  rescued: boolean;
-  rescued_date: string;
-  rescued_time: string;
-}
+import { RewardModel } from "./reward.model";
 
 interface UserModel {
   id: string;
@@ -16,7 +10,7 @@ interface UserModel {
   email: string;
   password: string;
   points: number;
-  rewards?: UserRewards[];
+  rewards?: RewardModel[];
   address?: AddressModel[];
 }
 

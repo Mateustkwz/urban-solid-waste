@@ -1,3 +1,5 @@
+import { AddressModel } from "./common.model";
+
 interface DeliveryDate {
   date: string;
   start_time: string;
@@ -14,6 +16,7 @@ export interface DeliveryModel {
   method: "association" | "home";
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled";
   delivery_date: DeliveryDate;
+  address: AddressModel;
   created_at: string;
   created_by: string;
   updated_at: string;

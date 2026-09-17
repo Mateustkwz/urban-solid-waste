@@ -1,6 +1,6 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
-import { Modal, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { Text, View } from ".";
 
@@ -24,31 +24,21 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
         </Text>
       </TouchableOpacity>
 
-      {/* Modal with Date Picker */}
-      <Modal visible={open} transparent animationType="fade">
-        <View style={styles.overlay}>
-          <View style={styles.pickerContainer}>
-            <DateTimePicker
-              value={value || new Date()}
-              mode="date"
-              display="spinner"
-              minimumDate={new Date()}
-              onChange={(event, selectedDate) => {
-                if (selectedDate) {
-                  onChange(selectedDate);
-                }
-                setOpen(false);
-              }}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setOpen(false)}
-            >
-              <Text style={styles.closeText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {open && (
+        <DateTimePicker
+          value={value || new Date()}
+          mode="date"
+          display="inline"
+          minimumDate={new Date()}
+          onChange={(event, selectedDate) => {
+            setOpen(false);
+
+            if (selectedDate) {
+              onChange(selectedDate);
+            }
+          }}
+        />
+      )}
     </View>
   );
 };

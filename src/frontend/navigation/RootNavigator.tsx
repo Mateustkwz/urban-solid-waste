@@ -13,9 +13,9 @@ import { loadAssociationsAndCityHallData } from "@frontend-services/environment.
 import { getCurrentUser } from "@frontend-services/user.service";
 import SplashScreen from "@screens/SplashScreen";
 import { useAssociationStore } from "@store/associationStore";
-import { useAuthStore } from "@store/authStore";
 import { useCityHallStore } from "@store/cityHallStore";
 import { useDeliveryStore } from "@store/deliveryStore";
+import { useUserStore } from "@store/userStore";
 
 import { AppNavigator } from "./AppNavigator";
 import { AuthNavigator } from "./AuthNavigator";
@@ -29,7 +29,7 @@ export const RootNavigator = () => {
     "Inter-SemiBold": Inter_600SemiBold,
   });
 
-  const { isAuthenticated, login, logout, setCurrentRole } = useAuthStore();
+  const { isAuthenticated, login, logout, setCurrentRole } = useUserStore();
   const { setAssociations } = useAssociationStore();
   const { setCityHall } = useCityHallStore();
   const { setDeliveries } = useDeliveryStore();
@@ -65,7 +65,6 @@ export const RootNavigator = () => {
       }
 
       if (session) {
-        console.log(currentUser);
         login(currentUser);
         setCurrentRole(
           currentUser,

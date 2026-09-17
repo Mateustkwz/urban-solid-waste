@@ -5,12 +5,12 @@ import { StyleSheet } from "react-native";
 
 import { Icon, Text, TouchableOpacity, View } from "@components/ui";
 import { UserRole } from "@constants/common";
-import { useAuthStore } from "@store/authStore";
+import { useUserStore } from "@store/userStore";
 import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
 export default function SelectRoleScreen() {
   const { t } = useTranslation();
-  const authStore = useAuthStore();
+  const authStore = useUserStore();
 
   const handleSelectRole = (role: UserRole) => {
     if (authStore.user) {

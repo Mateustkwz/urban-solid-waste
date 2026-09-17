@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -29,9 +29,22 @@ import {
   TimeSelector,
   View,
 } from "@components/ui/";
+import {
+  createNewDelivery,
+  updateDelivery,
+} from "@frontend-services/delivery.service";
 import { Address } from "@frontend-types/common.type";
-import { AppNavProp } from "@navigation/AppNavigator";
-import { useAuthStore } from "@store/authStore";
+import { DeliveryType } from "@frontend-types/delivery.type";
+import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
+import { AppNavProp, AppNavigationList } from "@navigation/AppNavigator";
+import { useDeliveryStore } from "@store/deliveryStore";
+import { useUserStore } from "@store/userStore";
+
+type DeliveryRouteProp = RouteProp<AppNavigationList, "DeliveryForm">;
+
+type DeliveryFormProps = {
+  route: DeliveryRouteProp;
+};
 
 type DeliveryFormData = {
   id: string;
@@ -131,13 +144,19 @@ const mockAssociations: User[] = [
   },
 ];
 
-export default function NewDeliveryScreen() {
+export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
   const { t } = useTranslation();
-  const { addresses } = useAuthStore();
+  const { addresses, user } = useUserStore();
+  const { setDeliveries } = useDeliveryStore();
   const navigation = useNavigation<AppNavProp>();
 
+  const delivery = route.params?.delivery;
+  const initialAssociation = mockAssociations.find(
+    (item) => item.id === delivery?.id,
+  );
+
   const [selectedAssociation, setSelectedAssociation] = useState<User>(
-    mockAssociations[0],
+    initialAssociation ?? mockAssociations[0],
   );
   const [loading, setLoading] = useState(false);
 
@@ -153,15 +172,18 @@ export default function NewDeliveryScreen() {
     formState: { errors },
   } = useForm<DeliveryFormData>({
     defaultValues: {
-      id: "",
-      material: [],
-      unit: materialUnit.kg,
-      quantity: undefined,
-      method: { id: "home", label: t("delivery.home") },
-      address: addresses ? addresses[0] : undefined,
+      id: delivery?.id ?? "",
+      material: delivery?.material ?? [],
+      unit: delivery?.unit ?? materialUnit.kg,
+      quantity: delivery?.quantity ? `${delivery?.quantity}` : undefined,
+      method: {
+        id: delivery?.method ?? "home",
+        label: t(`delivery.${delivery?.method ?? "home"}`),
+      },
+      address: delivery?.address ?? addresses[0],
       association: {
-        id: mockAssociations[0].id,
-        label: mockAssociations[0].name,
+        id: selectedAssociation.id,
+        label: selectedAssociation.name,
       },
       date: new Date(),
       time: `${new Date().getHours()}:00`,
@@ -170,10 +192,53 @@ export default function NewDeliveryScreen() {
 
   const methodValue = useWatch({ control, name: "method" });
 
-  const submitForm = (data: DeliveryFormData) => {
+  const submitForm = async (data: DeliveryFormData) => {
     setLoading(true);
-    console.log("Form submitted:", data);
-    setLoading(false);
+
+    const splittedTime = data.time.split(":");
+    const now = new Date().toString();
+
+    try {
+      let updatedDeliveries: DeliveryType[] = [];
+      const newDelivery = {
+        associationId: data.association.id,
+        id: data.id,
+        userId: user?.id ?? "",
+        material: data.material,
+        quantity: Number(data.quantity),
+        unit: data.unit.toLowerCase() as "kg" | "unit",
+        method: data.method.id,
+        status: "pending" as DeliveryType["status"],
+        deliveryDate: {
+          date: data.date.toString(),
+          endTime: data.time,
+          startTime: `${Number(splittedTime[0]) + 2}:${splittedTime[1]}`,
+        },
+        address: data.address,
+        createdAt: now,
+        createdBy: user?.id ?? "",
+        updatedAt: now,
+        updatedBy: user?.id ?? "",
+      };
+
+      if (delivery) {
+        updatedDeliveries = await updateDelivery(newDelivery);
+      } else {
+        updatedDeliveries = await createNewDelivery(newDelivery);
+      }
+
+      setDeliveries(updatedDeliveries);
+
+      navigation.goBack();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      showToast(
+        "error",
+        t(`error.title.${delivery ? "editDelivery" : "newDelivery"}`),
+        (handleErrorMessage(error) || error) as string,
+      );
+    }
   };
 
   if (!addresses.length) {
@@ -276,7 +341,7 @@ export default function NewDeliveryScreen() {
                 }}
                 render={({ field: { onChange, value } }) => (
                   <TextInput
-                    style={{ width: 140 }}
+                    style={{ width: 148 }}
                     icon="Weight"
                     keyboardType="numeric"
                     value={value}
@@ -298,10 +363,12 @@ export default function NewDeliveryScreen() {
                 name="unit"
                 render={({ field: { onChange, value } }) => (
                   <RadioSelect
-                    options={Object.values(materialUnit).map((item) => ({
-                      value: item,
-                      label: item,
-                    }))}
+                    options={Object.entries(materialUnit).map(
+                      ([key, value]) => ({
+                        value: key,
+                        label: value,
+                      }),
+                    )}
                     selected={value}
                     position="horizontal"
                     onChange={onChange}
@@ -424,8 +491,9 @@ export default function NewDeliveryScreen() {
           color="surface"
           style={styles.submitButton}
           isLoading={loading}
+          paddingVertical={Spacing.md}
         >
-          {t("delivery.submit")}
+          {t(`delivery.${delivery ? "edit" : "submit"}`)}
         </TextButton>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -481,10 +549,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   submitButton: {
-    marginTop: Spacing.xxl,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.xl,
-    borderRadius: Radius.xl,
+    marginTop: Spacing.lg,
+    borderRadius: Radius.xxxl,
     width: "100%",
     alignItems: "center",
   },

@@ -7,9 +7,15 @@ import { formatDateShort } from "@frontend-utils/date.util";
 import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
 import { materials } from "@constants/common";
-import { Icon, Text, View } from "./";
+import { Icon, Text, TouchableOpacity, View } from "./";
 
-export const DeliveryCard = ({ data }: { data: DeliveryType }) => {
+export const DeliveryCard = ({
+  data,
+  handleDelivery,
+}: {
+  data: DeliveryType;
+  handleDelivery: (delivery: DeliveryType) => void;
+}) => {
   const { t } = useTranslation();
   let statusColor: {
     color: keyof typeof Colors.light;
@@ -28,17 +34,29 @@ export const DeliveryCard = ({ data }: { data: DeliveryType }) => {
       statusColor.color = "red";
       statusColor.background = "redBackground";
       break;
+    case "collected":
+      statusColor.color = "primary";
+      statusColor.background = "citizenBackground";
+      break;
+    default:
+      statusColor.color = "associationIcon";
+      statusColor.background = "associationBackground";
+      break;
   }
 
   return (
-    <View style={styles.deliveryContainer} background="background">
+    <TouchableOpacity
+      style={styles.deliveryContainer}
+      backgroundColor="surface"
+      onPress={() => handleDelivery(data)}
+    >
       <View style={styles.deliveryIcon} background="componentBackground">
         <Icon name="Recycle" color="primary" />
       </View>
       <View style={styles.deliveryContent}>
         <View style={styles.deliveryTitleContainer}>
           <Text variant="h1" style={Size.body}>
-            {`${t("common.word.delivery")} #${data.id}`}
+            {`${t("common.word.delivery")} #${data.id.slice(0, 8)}`}
           </Text>
           <View style={styles.deliveryTitleRightContent}>
             <View
@@ -74,7 +92,7 @@ export const DeliveryCard = ({ data }: { data: DeliveryType }) => {
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -5,19 +5,19 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
 import {
-  Icon,
-  LinearGradient,
-  Text,
-  TextButton,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Icon,
+    LinearGradient,
+    Text,
+    TextButton,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "@components/ui";
 import { login, saveToken } from "@frontend-services/auth.service";
 import { AuthNavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCNPJ, isValidCPF } from "@frontend-utils/userValidation.util";
-import { useAuthStore } from "@store/authStore";
+import { useUserStore } from "@store/userStore";
 import { Colors, Radius, Spacing } from "@theme/index";
 
 type LoginFormData = {
@@ -28,7 +28,7 @@ type LoginFormData = {
 export default function LoginScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation<AuthNavigationProp>();
-  const authStore = useAuthStore();
+  const authStore = useUserStore();
   const [loading, setLoading] = useState(false);
 
   const {

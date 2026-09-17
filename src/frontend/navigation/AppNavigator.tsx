@@ -7,12 +7,13 @@ import React from "react";
 import { Address } from "@frontend-types/common.type";
 import AboutScreen from "@screens/AboutScreen";
 import AddressFormScreen from "@screens/AddressFormScreen";
+import DeliveryFormScreen from "@screens/DeliveryFormScreen";
 import MyAddresses from "@screens/MyAddressesScreen";
-import NewDeliveryScreen from "@screens/NewDeliveryScreen";
 import SelectRole from "@screens/SelectRole";
 
-import { useAuthStore } from "../store/authStore";
+import { useUserStore } from "../store/userStore";
 
+import { DeliveryType } from "@frontend-types/delivery.type";
 import { AssociationNavigator } from "./AssociationNavigator";
 import { CitizenNavigator } from "./CitizenNavigator";
 import { CityHallNavigator } from "./CityHallNavigator";
@@ -20,7 +21,7 @@ import { CityHallNavigator } from "./CityHallNavigator";
 export type AppNavigationList = {
   Main: undefined;
   About: undefined;
-  NewDelivery: undefined;
+  DeliveryForm: { delivery?: DeliveryType };
   AddressForm: { address?: Address };
   MyAddresses: undefined;
 };
@@ -30,7 +31,7 @@ export type AppNavProp = NativeStackNavigationProp<AppNavigationList>;
 const RootStack = createNativeStackNavigator<AppNavigationList>();
 
 export const AppNavigator = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useUserStore();
 
   if (!user) {
     logout();
@@ -67,9 +68,12 @@ export const AppNavigator = () => {
 
       {/* New Delivery screen */}
       <RootStack.Screen
-        name="NewDelivery"
-        component={NewDeliveryScreen}
-        options={{ presentation: "modal", title: "Nova Entrega" }}
+        name="DeliveryForm"
+        component={DeliveryFormScreen}
+        options={({ route }) => ({
+          presentation: "modal",
+          title: route.params.delivery ? "Editar Entrega" : "Nova Entrega",
+        })}
       />
 
       {/* Address Form screen */}

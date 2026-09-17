@@ -14,7 +14,7 @@ type ProgressBarProps = ViewProps & {
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
   height = 20,
-  backgroundColor = "citizenBackground", // light green
+  backgroundColor = "associationBackground", // light green
   fillColor = "primary", // dark green
   ...props
 }) => {
@@ -22,13 +22,16 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const color = useThemeColor(fillColor);
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: bgc, height, borderRadius: height / 2 },
-      ]}
-      {...props}
-    >
+    <View style={[styles.container]} {...props}>
+      <View
+        style={{
+          position: "absolute",
+          backgroundColor: bgc,
+          height,
+          borderRadius: height / 2,
+          width: "100%",
+        }}
+      />
       <View
         style={{
           width: `${Math.min(Math.max(progress, 0), 1) * 100}%`,
@@ -43,6 +46,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     width: "100%",
     overflow: "hidden",
   },

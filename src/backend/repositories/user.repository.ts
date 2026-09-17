@@ -181,6 +181,20 @@ const updateAddress = async (user: UserModel, address: AddressModel[]) => {
   await delay();
 };
 
+const updateRewards = async (user: UserModel) => {
+  const data = await AsyncStorage.getItem("@user");
+
+  const users: UserSchema = JSON.parse(data as string);
+
+  users["@user"][user.cpf_or_cnpj] = user;
+
+  await AsyncStorage.setItem("@user", JSON.stringify(users));
+
+  await delay();
+
+  return users;
+};
+
 const deleteAddresses = async (user: UserModel) => {
   const data = await AsyncStorage.getItem("@user");
 
@@ -207,4 +221,5 @@ export default {
   createUser,
   updateAddress,
   deleteAddresses,
+  updateRewards,
 };

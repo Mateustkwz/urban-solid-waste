@@ -49,7 +49,9 @@ export const RadioSelect = ({
             style={[
               styles.circle,
               { borderColor },
-              selected === opt.value && { backgroundColor: primary },
+              (selected === opt.value || selected === opt.label) && {
+                backgroundColor: primary,
+              },
             ]}
           />
           <Text style={[styles.label, { color: textColor }]}>{opt.label}</Text>

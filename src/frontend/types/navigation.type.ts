@@ -12,10 +12,9 @@ type AuthNavigationProp = NativeStackNavigationProp<
 
 type AppStackParamList = {
   Main: undefined;
-  NewDelivery: undefined;
+  DeliveryForm: undefined;
 };
 
 type AppNavigationProp = NativeStackNavigationProp<AppStackParamList, "Main">;
 
 export { AppNavigationProp, AuthNavigationProp };
-

@@ -19,7 +19,7 @@ import {
   showToast,
 } from "@frontend-utils/common.util";
 import { AppNavigationList } from "@navigation/AppNavigator";
-import { useAuthStore } from "@store/authStore";
+import { useUserStore } from "@store/userStore";
 import { Colors } from "@theme/colors";
 import { Spacing } from "@theme/spacing";
 
@@ -42,7 +42,7 @@ type AddressFormData = {
 
 export default function AddressRegisterScreen({ route }: AddressFormProps) {
   const { t } = useTranslation();
-  const { user, updateAddresses } = useAuthStore();
+  const { user, updateAddresses } = useUserStore();
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);

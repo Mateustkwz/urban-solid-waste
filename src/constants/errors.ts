@@ -87,6 +87,8 @@ const errorMessages = {
   internalServerError: "Erro interno no servidor!",
   deliveryNotFound: "Entrega não encontrada!",
   associationNotFound: "Associação não encontrada!",
+  rewardAlreadyExists: "Recompensa já existe!",
+  rewardNotFound: "Recompensa não encontrada!",
   invalidDeliveryStatus: "Status de entrega inválido!",
   invalidDeliveryMethod: "Método de entrega inválido!",
   invalidDeliveryUnit: "Unidade de entrega inválida!",

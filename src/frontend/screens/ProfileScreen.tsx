@@ -13,58 +13,16 @@ import {
   View,
 } from "@components/ui";
 import { logout as serviceLogout } from "@frontend-services/auth.service";
-import { DeliveryType } from "@frontend-types/delivery.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { getEcoLevel } from "@frontend-utils/points.util";
 import { AppNavProp } from "@navigation/AppNavigator";
-import { useAuthStore } from "@store/authStore";
 import { useDeliveryStore } from "@store/deliveryStore";
+import { useUserStore } from "@store/userStore";
 import { Radius, Shadows, Size, Spacing } from "@theme/index";
-
-const mockRecentDeliveries: DeliveryType[] = [
-  {
-    id: "2026-01",
-    material: ["paper", "plastic"],
-    associationId: "user-001",
-    createdAt: "",
-    updatedAt: "",
-    updatedBy: "",
-    userId: "",
-    deliveryDate: {
-      date: "2026-08-17",
-      startTime: "08:00",
-      endTime: "10:00",
-    },
-    quantity: 0.8,
-    method: "home",
-    unit: "kg",
-    status: "collected",
-    points: 85,
-  },
-  {
-    id: "2026-02",
-    material: ["paper", "plastic"],
-    associationId: "user-002",
-    createdAt: "",
-    updatedAt: "",
-    updatedBy: "",
-    userId: "",
-    deliveryDate: {
-      date: "2026-08-29",
-      startTime: "10:00",
-      endTime: "12:00",
-    },
-    quantity: 8,
-    method: "home",
-    unit: "unit",
-    status: "collected",
-    points: 85,
-  },
-];
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useUserStore();
   const { deliveries } = useDeliveryStore();
   const navigation = useNavigation<AppNavProp>();
 
@@ -72,8 +30,8 @@ export default function ProfileScreen() {
 
   const userLevel = useMemo(() => getEcoLevel(user?.points || 0), [user]);
   const deliveredOnes = useMemo(
-    () => mockRecentDeliveries.filter((deliv) => deliv.status === "collected"),
-    [],
+    () => deliveries.filter((deliv) => deliv.status === "collected"),
+    [deliveries],
   );
   const userTotalPoints = useMemo(
     () =>

@@ -1,3 +1,5 @@
+import { Address } from "./common.type";
+
 type DeliveryDate = {
   date: string;
   startTime: string;
@@ -14,7 +16,9 @@ export type DeliveryType = {
   method: "association" | "home";
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled";
   deliveryDate: DeliveryDate;
+  address: Address;
   createdAt: string;
+  createdBy: string;
   updatedAt: string;
   updatedBy: string;
   points?: number;

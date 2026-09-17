@@ -1,8 +1,12 @@
+import * as Crypto from "expo-crypto";
+
+import { Address } from "@backend-types/common.type";
 import { Delivery } from "@backend-types/delivery.type";
 import {
-  transformDeliveryData,
-  transformDeliveryDataToModel,
-} from "@backend-utils/deliveryData.utils";
+  toDeliveryData,
+  toDeliveryModel,
+} from "@backend-utils/deliveryData.util";
+import { convertAddressDataToModel } from "@backend-utils/userData.util";
 import {
   createBadRequestError,
   createNotFoundError,
@@ -27,7 +31,7 @@ const getAssociationDeliveries = async (
   const associationDeliveries = Object.values(deliveries)
     .map((delivery) => {
       if (delivery.association_id === associationId) {
-        return transformDeliveryData(delivery);
+        return toDeliveryData(delivery);
       }
 
       return null;
@@ -47,7 +51,7 @@ const getUserDeliveries = async (userId: string): Promise<Delivery[]> => {
   const userDeliveries = Object.values(deliveries)
     .map((delivery) => {
       if (delivery.user_id === userId) {
-        return transformDeliveryData(delivery);
+        return toDeliveryData(delivery);
       }
 
       return null;
@@ -72,7 +76,7 @@ const getDeliveryById = async (
     return null;
   }
 
-  return transformDeliveryData(delivery);
+  return toDeliveryData(delivery);
 };
 
 const updateDeliveryById = async (
@@ -82,7 +86,8 @@ const updateDeliveryById = async (
   unit?: "kg" | "unit",
   quantity?: number,
   userId?: string,
-): Promise<void> => {
+  address?: Address,
+): Promise<Delivery[]> => {
   const deliveries = await getDelivery();
 
   if (!deliveries) {
@@ -119,9 +124,18 @@ const updateDeliveryById = async (
     delivery.quantity = quantity;
   }
 
+  // Update the delivery address
+  if (address) {
+    delivery.address = convertAddressDataToModel([address])[0];
+  }
+
   delivery.updated_at = new Date().toISOString();
 
-  await updateDelivery(delivery);
+  const updatedDeliveries = await updateDelivery(delivery);
+
+  return Object.values(updatedDeliveries)
+    .filter((item) => item.user_id === userId)
+    .map((rawDelivery) => toDeliveryData(rawDelivery));
 };
 
 const updateDeliveryStatusById = async (
@@ -161,24 +175,23 @@ const updateDeliveryStatusById = async (
 const createNewDelivery = async (
   delivery: Delivery,
   associationId?: string,
-): Promise<void> => {
-  const deliveries = await getDelivery();
-
-  if (!deliveries) {
-    throw new Error(createNotFoundError(errorMessages.deliveryNotFound));
-  }
-
+): Promise<Delivery[]> => {
   const newDelivery = {
     ...delivery,
     association_id: associationId,
+    id: Crypto.randomUUID(),
   };
 
-  await createDelivery(
-    transformDeliveryDataToModel(
+  const updatedDeliveries = await createDelivery(
+    toDeliveryModel(
       newDelivery,
       associationId ? associationId : delivery.userId,
     ),
   );
+
+  return Object.values(updatedDeliveries)
+    .filter((item) => item.user_id === delivery.userId)
+    .map((rawDelivery) => toDeliveryData(rawDelivery));
 };
 
 const deleteDelivery = async (deliveryId: string): Promise<void> => {

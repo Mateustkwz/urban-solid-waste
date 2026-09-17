@@ -10,66 +10,37 @@ import {
   View,
 } from "@components/ui";
 import { DeliveryType } from "@frontend-types/delivery.type";
-import { AppNavigationProp } from "@frontend-types/navigation.type";
+import { AppNavProp } from "@navigation/AppNavigator";
 import { useNavigation } from "@react-navigation/native";
+import { useDeliveryStore } from "@store/deliveryStore";
 import { Radius } from "@theme/radius";
 import { Spacing } from "@theme/spacing";
 
 export default function DeliveryScreen() {
-  const navigation = useNavigation<AppNavigationProp>();
   const { t } = useTranslation();
+  const navigation = useNavigation<AppNavProp>();
+  const { deliveries } = useDeliveryStore();
 
-  const mockRecentDeliveries: DeliveryType[] = [
-    {
-      id: "2026-01",
-      material: ["paper", "plastic"],
-      associationId: "user-001",
-      createdAt: "",
-      updatedAt: "",
-      updatedBy: "",
-      userId: "",
-      deliveryDate: {
-        date: "2026-08-17",
-        startTime: "08:00",
-        endTime: "10:00",
-      },
-      quantity: 0.8,
-      method: "home",
-      unit: "kg",
-      status: "collected",
-      points: 85,
-    },
-    {
-      id: "2026-02",
-      material: ["paper", "plastic"],
-      associationId: "user-002",
-      createdAt: "",
-      updatedAt: "",
-      updatedBy: "",
-      userId: "",
-      deliveryDate: {
-        date: "2026-08-29",
-        startTime: "10:00",
-        endTime: "12:00",
-      },
-      quantity: 0.8,
-      method: "home",
-      unit: "kg",
-      status: "pending",
-      points: 85,
-    },
-  ];
+  const handleNewDelivery = (delivery?: DeliveryType) => {
+    navigation.navigate("DeliveryForm", { delivery });
+  };
 
-  const handleNewDelivery = () => {
-    navigation.navigate("NewDelivery");
+  const handleEditDelivery = (delivery: DeliveryType) => {
+    navigation.navigate("DeliveryForm", { delivery });
   };
 
   return (
     <View style={styles.deliveryContainer}>
       <FlatList
-        data={mockRecentDeliveries}
+        data={deliveries}
         contentContainerStyle={{ gap: Spacing.sm }}
-        renderItem={({ item }) => <DeliveryCard key={item.id} data={item} />}
+        renderItem={({ item }) => (
+          <DeliveryCard
+            key={item.id}
+            data={item}
+            handleDelivery={handleEditDelivery}
+          />
+        )}
         keyExtractor={(item) => item.id}
         onEndReachedThreshold={0.5} // triggers when 50% from bottom
       />
@@ -77,7 +48,7 @@ export default function DeliveryScreen() {
         textColor="surface"
         borderRadius={Radius.huge}
         style={styles.buttonContainer}
-        onPress={handleNewDelivery}
+        onPress={() => handleNewDelivery()}
       >
         <View style={styles.buttonContent}>
           <Icon name="Plus" />

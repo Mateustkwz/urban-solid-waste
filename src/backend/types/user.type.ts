@@ -1,12 +1,6 @@
 import { UserRole } from "@constants/common";
 import { Address } from "./common.type";
-
-interface UserRewards {
-  rewardId: string;
-  rescued: boolean;
-  rescuedDate: string;
-  rescuedTime: string;
-}
+import { Reward } from "./reward.type";
 
 interface User {
   id: string;
@@ -18,7 +12,7 @@ interface User {
   address?: Address[];
   points?: number;
   currentRole?: UserRole;
-  rewards?: UserRewards[];
+  rewards?: Reward[];
 }
 
 export { User };

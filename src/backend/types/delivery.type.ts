@@ -1,3 +1,5 @@
+import { Address } from "./common.type";
+
 interface DeliveryDate {
   date: string;
   startTime: string;
@@ -14,6 +16,8 @@ export interface Delivery {
   method: "association" | "home";
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled";
   deliveryDate: DeliveryDate;
+  address: Address;
+  createdBy: string;
   createdAt: string;
   updatedAt: string;
   updatedBy: string;

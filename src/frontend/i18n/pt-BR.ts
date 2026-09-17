@@ -59,13 +59,15 @@ export default {
       edit: "Editar",
       complement: "Complemento",
       back: "Voltar",
+      rewards: "Recompensas",
+      rescued: "Resgatados",
     },
     headerTab: {
       Delivery: "Minhas Entregas",
       Home: "Home",
       Profile: "Perfil",
       Info: "Info",
-      Rewards: "Prêmios",
+      Rewards: "Recompensas",
       NewDeliveryScreen: "Nova Entrega",
     },
     bottomTab: {
@@ -113,6 +115,7 @@ export default {
     newDelivery: "Nova Entrega",
     newDeliveryDescription: "Por favor, preencha os dados do novo delivery.",
     submit: "Registrar nova entrega",
+    edit: "Salvar alterações",
     home: "Coleta domiciliar",
     association: "Entregar na associação",
     method: {
@@ -128,6 +131,10 @@ export default {
     newAddress: "Novo Endereço",
     editTitle: "Salvar Alterações",
     newTitle: "Adicionar Endereço",
+  },
+  reward: {
+    description: "Troque seus pontos por benefícios",
+    balance: "Meu saldo",
   },
   error: {
     format: {
@@ -157,6 +164,8 @@ export default {
       editAddress: "Erro ao editar endereço",
       newAddress: "Erro ao adicionar novo endereço",
       loadAddresses: "Erro ao carregar endereços",
+      newDelivery: "Erro ao criar nova entrega",
+      editDelivery: "Erro ao editar entrega",
     },
   },
   splash: {
