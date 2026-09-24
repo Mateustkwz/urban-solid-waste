@@ -80,6 +80,7 @@ const errorMessages = {
   duplicateAddressName: "Nome do endenreço já existe!",
   addressAlreadyExists: "Endereço já existe",
   invalidDocument: "Documento inválido!",
+  insuficientPoints: "Usuário não tem pontos o suficiente!",
   addressNotFound: "Endereço não encontrado!",
   sessionExpired: "Sessão expirada!",
   sessionNotFound: "Sessão não encontrada!",

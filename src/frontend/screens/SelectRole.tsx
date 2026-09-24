@@ -43,7 +43,7 @@ export default function SelectRoleScreen() {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} background="background">
       <View style={styles.header} background="background">
         <View background="primary" style={styles.iconHeaderContainer}>
           <Icon name="Recycle" size={Spacing.huge} style={styles.iconHeader} />

@@ -1,3 +1,4 @@
+import { useThemeColor } from "@hooks/useThemeColor";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -10,6 +11,9 @@ export const ChipSelector: React.FC<ChipSelectorProps> = ({
   categories,
   onSelect,
 }) => {
+  const selectedColor = useThemeColor("primary");
+  const unselectedColor = useThemeColor("surface");
+
   const [selected, setSelected] = useState<string>(categories[0]);
 
   const handlePress = (category: string) => {
@@ -28,7 +32,11 @@ export const ChipSelector: React.FC<ChipSelectorProps> = ({
           key={cat}
           style={[
             styles.button,
-            selected === cat ? styles.buttonSelected : styles.buttonUnselected,
+            {
+              backgroundColor:
+                selected === cat ? selectedColor : unselectedColor,
+            },
+            selected === cat && styles.buttonUnselected,
           ]}
           onPress={() => handlePress(cat)}
         >
@@ -56,11 +64,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginHorizontal: 4,
   },
-  buttonSelected: {
-    backgroundColor: "#4CAF50", // verde
-  },
   buttonUnselected: {
-    backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ccc",
   },

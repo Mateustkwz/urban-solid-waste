@@ -17,6 +17,8 @@ import { useCityHallStore } from "@store/cityHallStore";
 import { useDeliveryStore } from "@store/deliveryStore";
 import { useUserStore } from "@store/userStore";
 
+import { getRewards } from "@frontend-services/reward.service";
+import { useRewardStore } from "@store/rewardStore";
 import { AppNavigator } from "./AppNavigator";
 import { AuthNavigator } from "./AuthNavigator";
 
@@ -29,22 +31,45 @@ export const RootNavigator = () => {
     "Inter-SemiBold": Inter_600SemiBold,
   });
 
-  const { isAuthenticated, login, logout, setCurrentRole } = useUserStore();
+  const {
+    isAuthenticated,
+    login,
+    logout,
+    setCurrentRole,
+    updateAddresses,
+    updateRewards,
+  } = useUserStore();
   const { setAssociations } = useAssociationStore();
   const { setCityHall } = useCityHallStore();
   const { setDeliveries } = useDeliveryStore();
+  const { setRewards } = useRewardStore();
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = useCallback(async () => {
     try {
-      const [currentUser, associationAndCityHall] = await Promise.all([
+      await authService.firstLaunch();
+
+      const [currentUser, associationAndCityHall, rewards] = await Promise.all([
         getCurrentUser(),
         loadAssociationsAndCityHallData(),
+        getRewards(),
       ]);
 
       if (!currentUser) {
         logout();
         return;
+      }
+
+      if (currentUser.rewards) {
+        updateRewards(currentUser.rewards);
+      }
+
+      if (currentUser.address) {
+        updateAddresses(currentUser.address);
+      }
+
+      if (rewards.length) {
+        setRewards(rewards);
       }
 
       if (associationAndCityHall.associations.length) {
@@ -87,6 +112,9 @@ export const RootNavigator = () => {
     setCityHall,
     setCurrentRole,
     setDeliveries,
+    setRewards,
+    updateAddresses,
+    updateRewards,
   ]);
 
   useEffect(() => {

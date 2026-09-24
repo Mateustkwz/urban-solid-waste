@@ -1,65 +1,94 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
-import { LinearGradient, RewardCard, Text, View } from "@components/ui";
+import {
+  ChipSelector,
+  DialogConfirm,
+  LinearGradient,
+  RewardCard,
+  Text,
+  View,
+} from "@components/ui";
+import { rescueSelectedReward } from "@frontend-services/reward.service";
+import { updateCurrentUser } from "@frontend-services/user.service";
 import { Reward } from "@frontend-types/reward.type";
+import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
+import { useThemeColor } from "@hooks/useThemeColor";
 import { useDeliveryStore } from "@store/deliveryStore";
+import { useRewardStore } from "@store/rewardStore";
 import { useUserStore } from "@store/userStore";
 import { Radius, Size, Spacing } from "@theme/index";
 
-export const rewardMocks: Reward[] = [
-  {
-    id: "1",
-    img: "https://aromatherapynaturals.com/wp-content/uploads/2025/01/stylish_reusable_water_bottles.jpg", // garrafa reutilizável
-    title: "Reusable Water Bottle",
-    description: "A stylish eco-friendly bottle to reduce plastic waste.",
-    requiredPoints: 100,
-    available: false,
-    used: true,
-  },
-  {
-    id: "2",
-    img: "https://ts2.mm.bing.net/th?id=OIP.YWxS9Z0_LuGf0YbNyIwkkwHaHa&pid=15.1&o=7&rm=3", // voucher/cartão
-    title: "Discount Voucher",
-    description: "10% off your next purchase at our partner stores.",
-    requiredPoints: 200,
-    available: true,
-  },
-  {
-    id: "3",
-    img: "https://ts3.mm.bing.net/th?id=OIP.b0IePsZNOrYf5OX7lHNknAHaHa&pid=15.1&o=7&rm=3", // bolsa de pano
-    title: "Canvas Tote Bag",
-    description: "Durable tote bag made from recycled materials.",
-    requiredPoints: 150,
-    available: true,
-  },
-  {
-    id: "4",
-    img: "https://ts3.mm.bing.net/th?id=OIP.AMLpITEqpmUtaRd2PRNwzgHaEc&pid=15.1&o=7&rm=3", // ingresso de cinema
-    title: "Movie Ticket",
-    description: "Enjoy a free movie session at selected cinemas.",
-    requiredPoints: 300,
-    available: true,
-  },
-];
+const rewardFiltersType = ["Minhas Recompensas", "Recompensas Disponíveis"];
 
 export default function RewardScreen() {
   const { t } = useTranslation();
-  const { user } = useUserStore();
+  const { user, userRewards, updateRewards } = useUserStore();
   const { deliveries } = useDeliveryStore();
+  const { rewards } = useRewardStore();
+
+  const bc = useThemeColor("primaryLight");
+
+  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [confirmRescue, setConfirmRescue] = useState(false);
+  const [rewardsFilter, setRewardsFilter] = useState(rewardFiltersType[0]);
+  const [loading, setLoading] = useState(false);
 
   const deliveredOnes = useMemo(
     () => deliveries.filter((deliv) => deliv.status === "collected"),
     [deliveries],
   );
+
   const userTotalPoints = useMemo(
     () =>
       (user?.points || 0) +
       deliveredOnes.reduce((prev, next) => prev + (next.points || 0), 0),
     [user, deliveredOnes],
   );
-  const [loading, setLoading] = useState(false);
+
+  const rewardsToShow = useMemo(
+    () => (rewardsFilter === "Minhas Recompensas" ? userRewards : rewards),
+    [rewards, rewardsFilter, userRewards],
+  );
+
+  const handleReward = (reward: Reward) => {
+    setSelectedReward(reward);
+    setConfirmRescue(true);
+  };
+
+  const handleCloseRescueDialog = () => {
+    setSelectedReward(null);
+    setConfirmRescue(false);
+  };
+
+  const handleRescueReward = async () => {
+    setConfirmRescue(false);
+    setLoading(true);
+
+    try {
+      if (selectedReward && user) {
+        const updatedUser = await rescueSelectedReward(
+          selectedReward.id,
+          user.cpfOrCnpj,
+        );
+
+        await updateCurrentUser({
+          ...user,
+          rewards: [...userRewards, selectedReward],
+        });
+        updateRewards(updatedUser.rewards);
+      }
+      setLoading(false);
+    } catch (error) {
+      showToast(
+        "error",
+        t("error.title.rewardRescue"),
+        (handleErrorMessage(error) || error) as string,
+      );
+      setLoading(false);
+    }
+  };
 
   if (!user) {
     return null;
@@ -110,16 +139,54 @@ export default function RewardScreen() {
                 {t("common.word.rescued")}
               </Text>
               <Text variant="h1" color="accent" style={styles.totalRedeemed}>
-                {3}
+                {user.rewards?.length}
               </Text>
             </View>
           </View>
         </LinearGradient>
-        <View style={styles.rewardFilterContainer}>
-          {rewardMocks.map((reward) => (
-            <RewardCard key={reward.id} reward={reward} />
-          ))}
+        <View style={styles.rewardSelectorContainer}>
+          <ChipSelector
+            categories={rewardFiltersType}
+            onSelect={setRewardsFilter}
+          />
         </View>
+        <View style={styles.rewardFilterContainer}>
+          {rewardsToShow.length ? (
+            <>
+              {rewardsToShow.map((reward) => (
+                <RewardCard
+                  key={reward.id}
+                  reward={reward}
+                  handleReward={handleReward}
+                />
+              ))}
+            </>
+          ) : (
+            <Text style={{ marginTop: Spacing.md }}>
+              Nenhuma recompensa{" "}
+              {rewardsFilter === "Minhas Recompensas"
+                ? "resgatada"
+                : "disponível"}
+              {"  "}
+              :(
+            </Text>
+          )}
+        </View>
+        <DialogConfirm
+          title="Deseja resgatar?"
+          onCancel={handleCloseRescueDialog}
+          onConfirm={handleRescueReward}
+          message={selectedReward?.title ?? ""}
+          visible={confirmRescue}
+        />
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <View style={styles.loadingBackground} />
+            <ActivityIndicator color={bc} size="large" />
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     </ScrollView>
   );
@@ -130,6 +197,23 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "relative",
     display: "flex",
+  },
+  loadingContainer: {
+    position: "absolute",
+    zIndex: 999,
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    bottom: 0,
+  },
+  loadingBackground: {
+    position: "absolute",
+    backgroundColor: "#000",
+    opacity: 0.3,
+    width: "100%",
+    height: "100%",
   },
   header: {
     height: Spacing.big * 4.3,
@@ -161,11 +245,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
   },
   totalRedeemed: { textAlign: "right" },
+  rewardSelectorContainer: {
+    alignItems: "center",
+    marginTop: Spacing.md,
+  },
   rewardFilterContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: Spacing.lg,
     justifyContent: "center",
     paddingTop: Spacing.lg,
+    paddingBlock: Spacing.xxxl,
   },
 });

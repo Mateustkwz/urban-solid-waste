@@ -2,7 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { User } from "@backend-types/user.type";
 import { delay } from "@backend-utils/common.util";
-import { searchUserById } from "@backend-utils/userData.util";
+import {
+  convertUserDataToModel,
+  searchUserById,
+} from "@backend-utils/userData.util";
 import { UserRole } from "@constants/common";
 import { AddressModel } from "@models/common.model";
 import { UserModel } from "@models/user.model";
@@ -58,6 +61,18 @@ const createUser = async (user: User, points = 0) => {
     rewards: [],
     address: [],
   };
+
+  await AsyncStorage.setItem("@user", JSON.stringify(users));
+
+  await delay();
+};
+
+const createMockUsers = async (usersMock: User[]) => {
+  const users: UserSchema = { "@user": {} };
+
+  usersMock.forEach((user) => {
+    users["@user"][user.cpfOrCnpj] = convertUserDataToModel(user);
+  });
 
   await AsyncStorage.setItem("@user", JSON.stringify(users));
 
@@ -222,4 +237,5 @@ export default {
   updateAddress,
   deleteAddresses,
   updateRewards,
+  createMockUsers,
 };

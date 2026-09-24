@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 
@@ -58,10 +59,22 @@ const deleteSession = async (userId: string): Promise<void> => {
   await delay();
 };
 
+const isFirstLaunch = async () => {
+  const hasOpened = await AsyncStorage.getItem("@app:hasOpened");
+
+  if (hasOpened === null) {
+    await AsyncStorage.setItem("@app:hasOpened", "true");
+    return true;
+  }
+
+  return false;
+};
+
 export default {
   createSession,
   deleteSession,
   getSessionByUserId,
   getSessions,
   saveSessions,
+  isFirstLaunch,
 };

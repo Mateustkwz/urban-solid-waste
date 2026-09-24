@@ -116,7 +116,7 @@ export default function CitizenScreen() {
             </Text>
           </View>
         </LinearGradient>
-        {deliveries.length && (
+        {deliveries.length ? (
           <View style={styles.contentContainer}>
             <Text variant="h2" style={Size.body}>
               {t("citizen.nextDelivery")}
@@ -156,6 +156,8 @@ export default function CitizenScreen() {
               ))}
             </View>
           </View>
+        ) : (
+          <></>
         )}
       </View>
     </ScrollView>

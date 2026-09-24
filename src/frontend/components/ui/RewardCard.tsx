@@ -7,13 +7,18 @@ import { Text, View } from ".";
 
 type RewardCardProps = {
   reward: Reward;
+  handleReward: (reward: Reward) => void;
 };
 
-export const RewardCard: React.FC<RewardCardProps> = ({ reward }) => {
+export const RewardCard: React.FC<RewardCardProps> = ({
+  reward,
+  handleReward,
+}) => {
   return (
     <TouchableOpacity
       style={[styles.card, !reward.available && styles.cardUnavailable]}
       disabled={!reward.available}
+      onPress={() => handleReward(reward)}
     >
       <Image source={{ uri: reward.img }} style={styles.image} />
 

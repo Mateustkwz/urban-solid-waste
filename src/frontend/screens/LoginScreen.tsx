@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
 import {
-    Icon,
-    LinearGradient,
-    Text,
-    TextButton,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Icon,
+  LinearGradient,
+  Text,
+  TextButton,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "@components/ui";
 import { login, saveToken } from "@frontend-services/auth.service";
 import { AuthNavigationProp } from "@frontend-types/navigation.type";
@@ -62,6 +62,12 @@ export default function LoginScreen() {
       setLoading(false);
     }
   };
+
+  // const handleResetMock = async () => {
+  //   await AsyncStorage.removeItem("@app:hasOpened");
+  //   await AsyncStorage.setItem("@user", "");
+  //   console.log("Limpo");
+  // };
 
   const handleRegister = () => {
     navigation.navigate("Register");
@@ -208,6 +214,7 @@ export default function LoginScreen() {
           <Text
             style={[styles.disclaimer, styles.termsAndPolicies]}
             color="primary"
+            // onPress={handleResetMock}
           >
             {t("common.policies")}
           </Text>

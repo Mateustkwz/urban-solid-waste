@@ -103,9 +103,9 @@ export default function AddressRegisterScreen({ route }: AddressFormProps) {
         let updatedAddresses = [];
 
         if (address) {
-          updatedAddresses = await updateAddress(newAddress, user.id);
+          updatedAddresses = await updateAddress(newAddress, user);
         } else {
-          updatedAddresses = await addNewAddress(newAddress, user.id);
+          updatedAddresses = await addNewAddress(newAddress, user);
         }
 
         updateAddresses(updatedAddresses);

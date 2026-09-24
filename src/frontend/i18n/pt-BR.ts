@@ -166,6 +166,7 @@ export default {
       loadAddresses: "Erro ao carregar endereços",
       newDelivery: "Erro ao criar nova entrega",
       editDelivery: "Erro ao editar entrega",
+      rewardRescue: "Erro ao resgatar recompensa",
     },
   },
   splash: {

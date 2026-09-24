@@ -6,12 +6,14 @@ import { UserRole } from "@constants/common";
 import {
   createBadRequestError,
   createConflictError,
-  createInternalServerError,
   createNotFoundError,
   errorMessages,
 } from "@constants/errors";
 import { RegisterSchema } from "@models/schemas/auth.schema";
 import authRepository from "@repositories/auth.repository";
+import userRepository from "@repositories/user.repository";
+import { associationMock } from "@storage/mock/associations.mock";
+import rewardService from "./reward.service";
 
 import userService from "./user.service";
 
@@ -46,20 +48,6 @@ const createAccount = async (user: User): Promise<void> => {
   };
 
   await userService.createUser(newUser);
-
-  const currentUser: User = {
-    ...newUser,
-    password: "",
-  };
-
-  try {
-    await userService.saveCurrentUser(currentUser);
-    await authRepository.createSession(currentUser.id);
-  } catch (error) {
-    throw new Error(
-      createInternalServerError(errorMessages.internalServerError + error),
-    );
-  }
 };
 
 const userAuthentication = async (
@@ -122,10 +110,30 @@ const logout = async (userId: string): Promise<void> => {
   await userService.removeCurrentUser();
 };
 
+const mockFirstLogin = async () => {
+  const isFirstLogin = await authRepository.isFirstLaunch();
+  const associations = [];
+
+  for (const association of associationMock) {
+    const associationPasswordEncrypted = {
+      ...association,
+      password: await encryptPassword(association.password),
+    };
+
+    associations.push(associationPasswordEncrypted);
+  }
+
+  if (isFirstLogin) {
+    await userRepository.createMockUsers(associations);
+    await rewardService.loadMockRewards();
+  }
+};
+
 export default {
   checkTokenValidity,
   createAccount,
   logout,
   userAuthentication,
   userSelectRole,
+  mockFirstLogin,
 };

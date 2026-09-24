@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     right: Spacing.lg,
   },
   logoutButton: {
-    marginTop: Spacing.huge,
+    marginTop: Spacing.xl,
     borderWidth: 2,
     borderRadius: Radius.grand,
     flexDirection: "row",

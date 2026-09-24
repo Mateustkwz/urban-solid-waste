@@ -58,6 +58,26 @@ const deleteReward = async (rewardId: string) => {
   await delay();
 
   await AsyncStorage.setItem("@reward", JSON.stringify(rewards));
+
+  return Object.values(rewards["@reward"]).map((item) => toRewardData(item));
 };
 
-export { createReward, deleteReward, getRewards, updateReward };
+const createMockRewards = async (rewardsMock: Reward[]) => {
+  const rewards: RewardSchema = { "@reward": {} };
+
+  rewardsMock.forEach((reward) => {
+    rewards["@reward"][reward.id] = toRewardModel(reward);
+  });
+
+  await AsyncStorage.setItem("@reward", JSON.stringify(rewards));
+
+  await delay();
+};
+
+export {
+  createMockRewards, createReward,
+  deleteReward,
+  getRewards,
+  updateReward
+};
+

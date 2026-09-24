@@ -9,7 +9,7 @@ type UserState = {
   isAuthenticated: boolean;
   user: User | null;
   addresses: Address[];
-  rewards: Reward[];
+  userRewards: Reward[];
   login: (user: User) => void;
   logout: () => void;
   setCurrentRole: (currentUser: User, role?: UserRole) => void;
@@ -19,7 +19,7 @@ type UserState = {
 
 export const useUserStore = create<UserState>((set) => ({
   addresses: [],
-  rewards: [],
+  userRewards: [],
   isAuthenticated: false,
   user: null,
 
@@ -28,14 +28,14 @@ export const useUserStore = create<UserState>((set) => ({
       isAuthenticated: true,
       user: user,
       addresses: (user.address || []) as Address[],
-      rewards: user.rewards || ([] as Reward[]),
+      userRewards: user.rewards || ([] as Reward[]),
     }),
 
   logout: () =>
     set({
       isAuthenticated: false,
       addresses: [],
-      rewards: [],
+      userRewards: [],
       user: null,
     }),
 
@@ -51,6 +51,6 @@ export const useUserStore = create<UserState>((set) => ({
 
   updateRewards: (currentRewards: Reward[]) =>
     set({
-      rewards: currentRewards,
+      userRewards: currentRewards,
     }),
 }));

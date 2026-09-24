@@ -2,6 +2,7 @@ import * as Crypto from "expo-crypto";
 
 import { Address } from "@backend-types/common.type";
 import { User } from "@backend-types/user.type";
+import { toRewardData } from "@backend-utils/rewardData.util";
 import {
   convertAddressDataToModel,
   convertAddressModelToData,
@@ -31,6 +32,7 @@ const getUserByDocument = async (cpfOrCnpj: string): Promise<User> => {
     role: user.role,
     cpfOrCnpj: user.cpf_or_cnpj,
     points: user.points,
+    rewards: user.rewards ? user.rewards.map((item) => toRewardData(item)) : [],
   };
 };
 

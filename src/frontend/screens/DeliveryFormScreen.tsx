@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { UserRole, materialUnit, materials } from "@constants/common";
+import { materialUnit, materials } from "@constants/common";
 import { User } from "@frontend-types/user.type";
 import { Radius } from "@theme/radius";
 import { Spacing } from "@theme/spacing";
@@ -37,6 +37,7 @@ import { Address } from "@frontend-types/common.type";
 import { DeliveryType } from "@frontend-types/delivery.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { AppNavProp, AppNavigationList } from "@navigation/AppNavigator";
+import { useAssociationStore } from "@store/associationStore";
 import { useDeliveryStore } from "@store/deliveryStore";
 import { useUserStore } from "@store/userStore";
 
@@ -58,105 +59,20 @@ type DeliveryFormData = {
   time: string;
 };
 
-const mockAssociations: User[] = [
-  {
-    id: "user-001",
-    role: [UserRole.ASSOCIATION],
-    name: "Associação Silva Reciclagens",
-    cpfOrCnpj: "123.456.789-00",
-    email: "mateus.silva@example.com",
-    password: "hashedPassword123",
-    points: 250,
-    currentRole: UserRole.ASSOCIATION,
-    address: [
-      {
-        id: "associacaosilva",
-        name: "Associação Silva",
-        type: "RESIDENTIAL",
-        street: "Rua das Flores",
-        number: 123,
-        zipCode: 80000000,
-        city: "Curitiba",
-        state: "PR",
-        complement: "Apto 45",
-      },
-    ],
-    rewards: [
-      {
-        rewardId: "reward-001",
-        rescued: true,
-        rescuedDate: "2026-09-01",
-        rescuedTime: "14:30",
-      },
-    ],
-  },
-  {
-    id: "user-002",
-    role: [UserRole.ASSOCIATION],
-    name: "Associação Recicla Curitiba",
-    cpfOrCnpj: "12.345.678/0001-99",
-    email: "contato@recicla.org",
-    password: "securePass456",
-    points: 1200,
-    currentRole: UserRole.ASSOCIATION,
-    address: [
-      {
-        id: "associacaocuritiba",
-        name: "Associação Curitiba",
-        type: "COLLECTION_POINT",
-        street: "Av. Brasil",
-        number: 456,
-        zipCode: 80500000,
-        city: "Curitiba",
-        state: "PR",
-      },
-    ],
-    rewards: [
-      {
-        rewardId: "reward-002",
-        rescued: false,
-        rescuedDate: "",
-        rescuedTime: "",
-      },
-    ],
-  },
-  {
-    id: "user-003",
-    role: [UserRole.ASSOCIATION],
-    name: "Associação da Prefeitura de Curitiba",
-    cpfOrCnpj: "98.765.432/0001-11",
-    email: "prefeitura@curitiba.gov.br",
-    password: "cityHallSecure789",
-    currentRole: UserRole.ASSOCIATION,
-    address: [
-      {
-        id: "prefeitura",
-        name: "Prefeitura",
-        type: "CITY_HALL",
-        street: "Praça Tiradentes",
-        number: 1,
-        zipCode: 80020000,
-        city: "Curitiba",
-        state: "PR",
-      },
-    ],
-    rewards: [],
-  },
-];
-
 export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
   const { t } = useTranslation();
   const { addresses, user } = useUserStore();
   const { setDeliveries } = useDeliveryStore();
+  const { associations } = useAssociationStore();
   const navigation = useNavigation<AppNavProp>();
 
   const delivery = route.params?.delivery;
-  const initialAssociation = mockAssociations.find(
+  const initialAssociation = associations.find(
     (item) => item.id === delivery?.id,
   );
 
   const [selectedAssociation, setSelectedAssociation] = useState<User>(
-    initialAssociation ?? mockAssociations[0],
+    initialAssociation ?? associations[0],
   );
   const [loading, setLoading] = useState(false);
 
@@ -424,12 +340,10 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
                 onChange={(event) => {
                   onChange(event);
                   setSelectedAssociation(
-                    mockAssociations.find(
-                      (item) => item.id === event.id,
-                    ) as User,
+                    associations.find((item) => item.id === event.id) as User,
                   );
                 }}
-                options={mockAssociations.map((item) => ({
+                options={associations.map((item) => ({
                   id: item.id,
                   label: item.name,
                 }))}

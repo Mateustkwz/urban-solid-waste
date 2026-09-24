@@ -264,11 +264,16 @@ export default function RegisterScreen() {
             control={control}
             name="role"
             render={({ field: { onChange, value } }) => (
+              // <RadioSelect
+              //   options={Object.entries(textRoles).map((role) => ({
+              //     value: role[0],
+              //     label: role[1],
+              //   }))}
+              //   onChange={onChange}
+              //   selected={value}
+              // />
               <RadioSelect
-                options={Object.entries(textRoles).map((role) => ({
-                  value: role[0],
-                  label: role[1],
-                }))}
+                options={[{ label: textRoles.CITIZEN, value: "CITIZEN" }]}
                 onChange={onChange}
                 selected={value}
               />

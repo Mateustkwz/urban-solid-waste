@@ -19,6 +19,10 @@ const checkSessionValidity = async (userId: string) => {
   return await authService.checkTokenValidity(userId);
 };
 
+const firstLaunch = async () => {
+  return authService.mockFirstLogin();
+};
+
 async function saveToken(token: string) {
   await AsyncStorage.setItem("sessionToken", token);
 }
@@ -32,7 +36,9 @@ async function clearToken() {
 }
 
 export {
-  checkSessionValidity, clearToken, getToken, login,
+  checkSessionValidity,
+  clearToken, firstLaunch, getToken,
+  login,
   logout,
   register,
   saveToken

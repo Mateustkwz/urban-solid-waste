@@ -6,6 +6,7 @@ export { Chip } from "./Chip";
 export { ChipSelector } from "./ChipSelector";
 export { DateSelector } from "./DateSelector";
 export { DeliveryCard } from "./DeliveryCard";
+export { DialogConfirm } from "./DialogConfirm";
 export { Dropdown } from "./DropDown";
 export { Icon } from "./Icon";
 export { LinearGradient } from "./LinearGradient";
