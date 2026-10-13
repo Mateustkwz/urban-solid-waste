@@ -8,11 +8,12 @@ interface User {
   name: string;
   cpfOrCnpj: string;
   email: string;
-  address?: Address[];
   password: string;
+  address?: Address[];
   points?: number;
   currentRole?: UserRole;
   rewards?: Reward[];
+  block?: boolean;
 }
 
 export { User };

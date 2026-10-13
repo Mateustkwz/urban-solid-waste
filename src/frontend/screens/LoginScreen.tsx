@@ -17,6 +17,7 @@ import { login, saveToken } from "@frontend-services/auth.service";
 import { AuthNavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCNPJ, isValidCPF } from "@frontend-utils/userValidation.util";
+import { useLoadData } from "@hooks/useLoadData";
 import { useUserStore } from "@store/userStore";
 import { Colors, Radius, Spacing } from "@theme/index";
 
@@ -29,6 +30,7 @@ export default function LoginScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation<AuthNavigationProp>();
   const authStore = useUserStore();
+  const { loadData } = useLoadData();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -44,23 +46,23 @@ export default function LoginScreen() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
+    try {
       const response = await login(data.document, data.password);
 
       if (!response.user.currentRole && response.user.role.length === 1) {
         response.user.currentRole = response.user.role[0];
       }
 
+      await loadData();
       authStore.login(response.user);
       await saveToken(response.token);
-
-      setLoading(false);
     } catch (error) {
       showToast("error", t("error.title.login"), handleErrorMessage(error));
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   // const handleResetMock = async () => {
@@ -163,9 +165,26 @@ export default function LoginScreen() {
           )}
         />
 
-        <TextButton fontWeight="700" style={styles.forgotPassword}>
-          {t("login.forgotPassword")}
-        </TextButton>
+        <View style={styles.forgotPasswordAndAboutContainer}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Icon name="Info" color="associationIcon" size={18} />
+            <TextButton
+              onPress={() => navigation.navigate("Info")}
+              color="associationIcon"
+              fontWeight="700"
+              paddingHorizontal={Spacing.sm}
+            >
+              {t("common.word.about")}
+            </TextButton>
+          </View>
+
+          <TextButton fontWeight="700">{t("login.forgotPassword")}</TextButton>
+        </View>
 
         <TouchableOpacity
           style={styles.button}
@@ -268,9 +287,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     marginBottom: Spacing.xl,
   },
-  forgotPassword: {
-    textAlign: "right",
-    marginBottom: Spacing.xxl, // antes: 24
+  forgotPasswordAndAboutContainer: {
+    marginBottom: Spacing.lg,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   button: {
     padding: Spacing.md, // antes: 14

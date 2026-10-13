@@ -14,6 +14,7 @@ export type CustomModalProps = ModalProps & {
   visible: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  padding?: number;
   containerStyle?: ViewStyle;
 };
 
@@ -22,6 +23,7 @@ export const BaseModal = ({
   onClose,
   children,
   containerStyle,
+  padding = 16,
   ...props
 }: CustomModalProps) => {
   const backgroundColor = useThemeColor("surface");
@@ -35,7 +37,13 @@ export const BaseModal = ({
       {...props}
     >
       <View style={styles.overlay}>
-        <View style={[styles.container, { backgroundColor }, containerStyle]}>
+        <View
+          style={[
+            styles.container,
+            { backgroundColor, padding },
+            containerStyle,
+          ]}
+        >
           {children}
         </View>
       </View>
@@ -53,7 +61,5 @@ const styles = StyleSheet.create({
   container: {
     width: "90%",
     borderRadius: 12,
-    padding: 16,
-    overflowY: "scroll",
   },
 });

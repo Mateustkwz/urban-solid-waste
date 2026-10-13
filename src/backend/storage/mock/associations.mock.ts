@@ -1,21 +1,21 @@
-import { User } from "@backend-types/user.type";
 import { UserRole } from "@constants/common";
 
-export const associationMock: User[] = [
+export const associationMock = [
   {
     id: "mock-001",
     role: [UserRole.ASSOCIATION],
     name: "Associação Silva Reciclagens",
-    cpfOrCnpj: "12345678900",
+    cpfOrCnpj: "44369417000100",
     email: "mateus.silva@example.com",
-    password: "hashedPassword123",
+    password: "123123",
     points: 250,
     currentRole: undefined,
+    phoneNumber: "(43) 9999-3333",
     address: [
       {
         id: "associacaosilva",
         name: "Associação Silva",
-        type: "RESIDENTIAL",
+        type: "COLLECTION_POINT",
         street: "Rua das Flores",
         number: 123,
         zipCode: 80000000,
@@ -30,11 +30,12 @@ export const associationMock: User[] = [
     id: "mock-002",
     role: [UserRole.ASSOCIATION],
     name: "Associação Recicla Curitiba",
-    cpfOrCnpj: "12345678000199",
+    cpfOrCnpj: "16111566000120",
     email: "contato@recicla.org",
-    password: "securePass456",
+    password: "123123",
     points: 1200,
     currentRole: undefined,
+    phoneNumber: "(41) 9999-8888",
     address: [
       {
         id: "associacaocuritiba",
@@ -52,21 +53,22 @@ export const associationMock: User[] = [
   {
     id: "mock-003",
     role: [UserRole.CITY_HALL],
-    name: "Associação da Prefeitura de Curitiba",
-    cpfOrCnpj: "98765432000111",
-    email: "prefeitura@curitiba.gov.br",
-    password: "cityHallSecure789",
+    name: "Prefeitura de Cornélio Procópio",
+    cpfOrCnpj: "09992287000158",
+    email: "prefeitura@cornelioprocopio.gov.br",
+    password: "123123",
     currentRole: undefined,
-    points: 1200,
+    points: 0,
+    phoneNumber: "(43) 3520-8000",
     address: [
       {
         id: "prefeitura",
         name: "Prefeitura",
         type: "CITY_HALL",
-        street: "Praça Tiradentes",
-        number: 1,
-        zipCode: 80020000,
-        city: "Curitiba",
+        street: "Avenida Minas Gerais",
+        number: 301,
+        zipCode: 86300000,
+        city: "Cornélio Procópio",
         state: "PR",
       },
     ],
@@ -93,6 +95,18 @@ export const associationMock: User[] = [
         state: "PR",
       },
     ],
+    rewards: [],
+  },
+  {
+    id: "mock-mateus",
+    role: [UserRole.CITIZEN],
+    name: "Mateus Kawazoe",
+    cpfOrCnpj: "06477158990",
+    email: "teste@teste.com",
+    password: "asdasd",
+    currentRole: undefined,
+    points: 1000,
+    address: [],
     rewards: [],
   },
 ];

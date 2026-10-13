@@ -28,6 +28,10 @@ export const AddressSelector: React.FC<AddressSelectorProps> = ({
 
   const [open, setOpen] = useState(false);
 
+  if (!addresses.length) {
+    return null;
+  }
+
   return (
     <View style={styles.addressSelectorContainer}>
       <Text variant="bodySmall">{t(`delivery.method.${method}`)}</Text>

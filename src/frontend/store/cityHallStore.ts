@@ -4,14 +4,22 @@ import { User } from "@frontend-types/user.type";
 
 type CityHallState = {
   cityHall: User | null;
-  setCityHall: (cityHall: User) => void;
+  userList: User[];
+  setCityHall: (cityHall: User | null) => void;
+  setUserList: (userList: User[]) => void;
 };
 
 export const useCityHallStore = create<CityHallState>((set) => ({
   cityHall: null,
+  userList: [],
 
-  setCityHall: (cityHall: User) =>
+  setCityHall: (cityHall: User | null) =>
     set({
       cityHall: cityHall,
+    }),
+
+  setUserList: (users: User[]) =>
+    set({
+      userList: users,
     }),
 }));

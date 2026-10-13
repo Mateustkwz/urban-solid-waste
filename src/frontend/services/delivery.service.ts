@@ -5,6 +5,10 @@ const loadUserDeliveries = async (userId: string) => {
   return deliveryService.getUserDeliveries(userId);
 };
 
+const loadAssociationDeliveries = async (associationId: string) => {
+  return deliveryService.getAssociationDeliveries(associationId);
+};
+
 const createNewDelivery = async (
   delivery: DeliveryType,
   associationId?: string,
@@ -24,14 +28,33 @@ const updateDelivery = async (delivery: DeliveryType) => {
   );
 };
 
+const updateDeliveryStatus = async (
+  deliveryId: string,
+  status: "pending" | "collected" | "cancelled" | "confirmed",
+  associationId: string,
+  userId: string,
+) => {
+  return deliveryService.updateDeliveryStatusById(
+    deliveryId,
+    status,
+    associationId,
+    userId,
+  );
+};
+
+const cancelDelivery = async (deliveryId: string, userId: string) => {
+  return deliveryService.cancelDelivery(deliveryId, "cancelled", userId);
+};
+
 const deleteDelivery = async (deliveryId: string) => {
   return deliveryService.deleteDelivery(deliveryId);
 };
 
 export {
-  createNewDelivery,
-  deleteDelivery,
+  cancelDelivery, createNewDelivery, deleteDelivery,
+  loadAssociationDeliveries,
   loadUserDeliveries,
-  updateDelivery
+  updateDelivery,
+  updateDeliveryStatus
 };
 

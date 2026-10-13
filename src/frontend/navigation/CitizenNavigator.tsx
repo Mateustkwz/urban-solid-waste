@@ -44,7 +44,7 @@ export const CitizenNavigator = () => {
               iconName = "Package";
               break;
             case "Rewards":
-              iconName = "Gift";
+              iconName = "Trophy";
               break;
             case "Profile":
               iconName = "User";

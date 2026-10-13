@@ -94,7 +94,7 @@ const rescueReward = async (rewardId: string, userDocument: string) => {
     getRewardById(rewardId),
     userService.getUserByDocument(userDocument),
   ]);
-  console.log(reward, user);
+
   if (!reward) {
     throw new Error(createNotFoundError(errorMessages.rewardNotFound));
   }
@@ -107,11 +107,29 @@ const rescueReward = async (rewardId: string, userDocument: string) => {
     throw new Error(createConflictError(errorMessages.insuficientPoints));
   }
 
-  const updatedUser = convertUserDataToModel({ ...user, rewards: [reward] });
+  const alreadyRescued = user.rewards?.find((item) => item.id === rewardId);
 
-  await userRepository.updateRewards(updatedUser);
+  if (alreadyRescued && !alreadyRescued.used) {
+    throw new Error(createConflictError(errorMessages.rewardAlreadyRescued));
+  }
 
-  return { ...user, rewards: [reward] };
+  const updatedRewards = [];
+
+  if (user.rewards) {
+    updatedRewards.push(...user.rewards);
+  }
+
+  updatedRewards.push(reward);
+
+  const updatedUser = convertUserDataToModel({
+    ...user,
+    points: (user.points ?? 0) - reward.requiredPoints,
+    rewards: updatedRewards,
+  });
+
+  await userRepository.updateUserByDocument(updatedUser);
+
+  return { ...user, rewards: updatedRewards, points: updatedUser.points };
 };
 
 const deleteRewardById = async (rewardId: string) => {

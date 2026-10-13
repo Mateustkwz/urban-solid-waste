@@ -13,6 +13,7 @@ interface User {
   points?: number;
   currentRole?: UserRole;
   rewards?: Reward[];
+  block?: boolean;
 }
 
 export { User };

@@ -60,18 +60,22 @@ export default function MyAddressesScreen() {
           showsVerticalScrollIndicator={false}
         />
       )}
-      <TouchableOpacity
-        textColor="surface"
-        borderRadius={Radius.huge}
-        style={styles.buttonContainer}
-        backgroundColor="associationIcon"
-        onPress={() => handleNewAddress()}
-      >
-        <View style={styles.buttonContent}>
-          <Icon name="HousePlus" />
-          <Text color="surface">{t("address.newAddress")}</Text>
-        </View>
-      </TouchableOpacity>
+      {user?.currentRole === "CITIZEN" ? (
+        <TouchableOpacity
+          textColor="surface"
+          borderRadius={Radius.huge}
+          style={styles.buttonContainer}
+          backgroundColor="associationIcon"
+          onPress={() => handleNewAddress()}
+        >
+          <View style={styles.buttonContent}>
+            <Icon name="HousePlus" />
+            <Text color="surface">{t("address.newAddress")}</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }

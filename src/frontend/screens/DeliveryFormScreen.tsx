@@ -30,8 +30,9 @@ import {
   View,
 } from "@components/ui/";
 import {
+  cancelDelivery,
   createNewDelivery,
-  updateDelivery,
+  updateDelivery
 } from "@frontend-services/delivery.service";
 import { Address } from "@frontend-types/common.type";
 import { DeliveryType } from "@frontend-types/delivery.type";
@@ -75,6 +76,7 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
     initialAssociation ?? associations[0],
   );
   const [loading, setLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   const avaiableMaterials = Object.entries(materials).map(([name, value]) => ({
     id: name,
@@ -108,6 +110,26 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
 
   const methodValue = useWatch({ control, name: "method" });
 
+  const handleCancelDelivery = async () => {
+    setCancelLoading(true);
+
+    if (!delivery || !user) {
+      setCancelLoading(false);
+      return;
+    }
+
+    try {
+      const updatedDeliveries = await cancelDelivery(delivery.id, user.id);
+
+      setDeliveries(updatedDeliveries);
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+
+    setCancelLoading(false);
+  };
+
   const submitForm = async (data: DeliveryFormData) => {
     setLoading(true);
 
@@ -130,7 +152,7 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
           endTime: data.time,
           startTime: `${Number(splittedTime[0]) + 2}:${splittedTime[1]}`,
         },
-        address: data.address,
+        address: data.address ? data.address : (addresses[0] as Address),
         createdAt: now,
         createdBy: user?.id ?? "",
         updatedAt: now,
@@ -202,10 +224,8 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        style={{ flexGrow: 1 }}
       >
-        {/* <Text variant="h1" style={Size.subtitle}>
-          {t("delivery.newDelivery")}
-        </Text> */}
         <Text variant="body" style={[styles.subtitle, Size.bodySmall]}>
           {t("delivery.newDeliveryDescription")}
         </Text>
@@ -367,6 +387,8 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
                 selected={
                   methodValue.id === "home" || !selectedAssociation.address
                     ? value
+                      ? value
+                      : addresses[0]
                     : selectedAssociation.address[0]
                 }
                 method={methodValue.id}
@@ -399,16 +421,31 @@ export default function DeliveryFormScreen({ route }: DeliveryFormProps) {
           </View>
         </View>
 
-        <TextButton
-          onPress={handleSubmit(submitForm)}
-          backgroundColor="primary"
-          color="surface"
-          style={styles.submitButton}
-          isLoading={loading}
-          paddingVertical={Spacing.md}
-        >
-          {t(`delivery.${delivery ? "edit" : "submit"}`)}
-        </TextButton>
+        {delivery?.status !== "collected" &&
+        delivery?.status !== "cancelled" ? (
+          <>
+            <TextButton
+              onPress={handleSubmit(submitForm)}
+              backgroundColor="primary"
+              color="surface"
+              style={styles.submitButton}
+              isLoading={loading}
+              paddingVertical={Spacing.md}
+            >
+              {t(`delivery.${delivery ? "edit" : "submit"}`)}
+            </TextButton>
+            <TextButton
+              onPress={handleCancelDelivery}
+              backgroundColor="red"
+              color="surface"
+              style={styles.submitButton}
+              isLoading={cancelLoading}
+              paddingVertical={Spacing.md}
+            >
+              {t("delivery.cancel")}
+            </TextButton>
+          </>
+        ) : null}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -463,7 +500,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   submitButton: {
-    marginTop: Spacing.lg,
+    marginTop: Spacing.md,
     borderRadius: Radius.xxxl,
     width: "100%",
     alignItems: "center",

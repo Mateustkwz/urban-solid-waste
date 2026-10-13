@@ -19,6 +19,8 @@ import {
   updateDelivery,
 } from "@repositories/delivery.repository";
 
+import userService from "./user.service";
+
 const getAssociationDeliveries = async (
   associationId: string,
 ): Promise<Delivery[]> => {
@@ -29,14 +31,8 @@ const getAssociationDeliveries = async (
   }
 
   const associationDeliveries = Object.values(deliveries)
-    .map((delivery) => {
-      if (delivery.association_id === associationId) {
-        return toDeliveryData(delivery);
-      }
-
-      return null;
-    })
-    .filter((v): v is Delivery => !!v);
+    .filter((delivery) => delivery.association_id === associationId)
+    .map((filtered) => toDeliveryData(filtered));
 
   return associationDeliveries;
 };
@@ -141,10 +137,15 @@ const updateDeliveryById = async (
 const updateDeliveryStatusById = async (
   deliveryId: string,
   status: "confirmed" | "collected" | "delivery" | "pending" | "cancelled",
-  associationId?: string,
-  userId?: string,
-): Promise<void> => {
+  associationId: string,
+  userId: string,
+): Promise<Delivery[]> => {
   const deliveries = await getDelivery();
+  const user = await userService.getUserById(userId);
+
+  if (!user) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
 
   if (!deliveries) {
     throw new Error(createNotFoundError(errorMessages.deliveryNotFound));
@@ -156,11 +157,11 @@ const updateDeliveryStatusById = async (
     throw new Error(createNotFoundError(errorMessages.deliveryNotFound));
   }
 
-  if (associationId && delivery.association_id !== associationId) {
+  if (delivery.association_id !== associationId) {
     throw new Error(createBadRequestError(errorMessages.permissionDenied));
   }
 
-  if (userId && delivery.user_id !== userId) {
+  if (delivery.user_id !== userId) {
     throw new Error(createBadRequestError(errorMessages.permissionDenied));
   }
 
@@ -169,7 +170,55 @@ const updateDeliveryStatusById = async (
   delivery.updated_at = new Date().toISOString();
   delivery.updated_by = (associationId ? associationId : userId) as string;
 
-  await updateDelivery(delivery);
+  const coef = 1 / delivery.quantity;
+  const points = (coef * delivery.quantity * 10) / 2;
+
+  if (status === "collected") {
+    await userService.updateUserPoints(userId, points);
+  }
+
+  const updatedDeliveries = await updateDelivery({ ...delivery, points });
+
+  return Object.values(updatedDeliveries)
+    .filter((item) => item.association_id === associationId)
+    .map((rawDelivery) => toDeliveryData(rawDelivery));
+};
+
+const cancelDelivery = async (
+  deliveryId: string,
+  status: "cancelled",
+  userId: string,
+) => {
+  const deliveries = await getDelivery();
+  const user = await userService.getUserById(userId);
+
+  if (!user) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
+
+  if (!deliveries) {
+    throw new Error(createNotFoundError(errorMessages.deliveryNotFound));
+  }
+
+  const delivery = Object.values(deliveries).find((d) => d.id === deliveryId);
+
+  if (!delivery) {
+    throw new Error(createNotFoundError(errorMessages.deliveryNotFound));
+  }
+
+  if (delivery.user_id !== userId) {
+    throw new Error(createBadRequestError(errorMessages.permissionDenied));
+  }
+
+  delivery.status = status;
+  delivery.updated_at = new Date().toISOString();
+  delivery.updated_by = userId;
+
+  const updatedDeliveries = await updateDelivery({ ...delivery });
+
+  return Object.values(updatedDeliveries)
+    .filter((item) => item.user_id === userId)
+    .map((rawDelivery) => toDeliveryData(rawDelivery));
 };
 
 const createNewDelivery = async (
@@ -211,6 +260,7 @@ const deleteDelivery = async (deliveryId: string): Promise<void> => {
 };
 
 export default {
+  cancelDelivery,
   createNewDelivery,
   deleteDelivery,
   getAssociationDeliveries,

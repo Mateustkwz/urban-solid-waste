@@ -6,6 +6,7 @@ import { toRewardData } from "@backend-utils/rewardData.util";
 import {
   convertAddressDataToModel,
   convertAddressModelToData,
+  convertUserDataToModel,
   convertUserModelToData,
 } from "@backend-utils/userData.util";
 import {
@@ -34,6 +35,20 @@ const getUserByDocument = async (cpfOrCnpj: string): Promise<User> => {
     points: user.points,
     rewards: user.rewards ? user.rewards.map((item) => toRewardData(item)) : [],
   };
+};
+
+const getAllUsers = async () => {
+  return userRepository.getAllUsers();
+};
+
+const getUserById = async (userId: string): Promise<User> => {
+  const user = await userRepository.getUserById(userId);
+
+  if (!user) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
+
+  return convertUserModelToData(user);
 };
 
 const loadAssociationsAndCityHall = async () => {
@@ -68,6 +83,30 @@ const createUser = async (user: User): Promise<void> => {
 
 const removeCurrentUser = async (): Promise<void> => {
   await userRepository.removeCurrentUser();
+};
+
+const blockUser = async (userId: string) => {
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
+
+  return userRepository.updateUserByDocument(
+    convertUserDataToModel({ ...user, block: true }),
+  );
+};
+
+const unblockUser = async (userId: string) => {
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
+
+  return userRepository.updateUserByDocument(
+    convertUserDataToModel({ ...user, block: false }),
+  );
 };
 
 const getUserAddresses = async (userId: string) => {
@@ -150,6 +189,14 @@ const updateCurrentAddress = async (address: Address, userId: string) => {
   return convertAddressModelToData(addresses);
 };
 
+const updateUserPoints = async (userId: string, points: number) => {
+  const response = await userRepository.updateUserPoints(userId, points);
+
+  if (!response) {
+    throw new Error(createNotFoundError(errorMessages.userNotFound));
+  }
+};
+
 const deleteAddresses = async (userId: string) => {
   const userData = await userRepository.getUserById(userId);
 
@@ -163,8 +210,12 @@ const deleteAddresses = async (userId: string) => {
 export default {
   addNewAddress,
   checkExists,
+  blockUser,
+  unblockUser,
   getCurrentUser,
+  getAllUsers,
   getUserByDocument,
+  getUserById,
   removeCurrentUser,
   saveCurrentUser,
   createUser,
@@ -172,4 +223,5 @@ export default {
   getUserAddresses,
   deleteAddresses,
   updateCurrentAddress,
+  updateUserPoints,
 };

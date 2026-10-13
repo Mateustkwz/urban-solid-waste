@@ -10,8 +10,6 @@ const SESSION_KEY = "sessions";
 const getSessions = async (): Promise<Session[]> => {
   const data = await SecureStore.getItemAsync(SESSION_KEY);
 
-  await delay();
-
   if (!data) {
     return [];
   }
@@ -21,7 +19,6 @@ const getSessions = async (): Promise<Session[]> => {
 
 const saveSessions = async (sessions: Session[]): Promise<void> => {
   await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(sessions));
-  await delay();
 };
 
 const createSession = async (userId: string): Promise<Session> => {
@@ -56,6 +53,10 @@ const deleteSession = async (userId: string): Promise<void> => {
   );
 
   await saveSessions(remainingSessions);
+};
+
+const clearAllSessions = async (): Promise<void> => {
+  await SecureStore.deleteItemAsync(SESSION_KEY);
   await delay();
 };
 
@@ -77,4 +78,5 @@ export default {
   getSessions,
   saveSessions,
   isFirstLaunch,
+  clearAllSessions,
 };

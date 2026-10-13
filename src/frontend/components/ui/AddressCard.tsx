@@ -45,6 +45,7 @@ export const AddressCard = ({
           alignSelf="flex-start"
           color="associationIcon"
           onPress={() => onEdit(data)}
+          paddingHorizontal={0}
         >
           {t("common.word.edit")}
         </TextButton>

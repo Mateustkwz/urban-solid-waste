@@ -131,6 +131,7 @@ export default function AddressRegisterScreen({ route }: AddressFormProps) {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        style={{ flexGrow: 1 }}
       >
         <View style={{ padding: Spacing.md }}>
           {/* Zip Code */}

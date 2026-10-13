@@ -124,7 +124,7 @@ const mockFirstLogin = async () => {
   }
 
   if (isFirstLogin) {
-    await userRepository.createMockUsers(associations);
+    await userRepository.createMockUsers(associations as User[]);
     await rewardService.loadMockRewards();
   }
 };

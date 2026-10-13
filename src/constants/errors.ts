@@ -85,6 +85,7 @@ const errorMessages = {
   sessionExpired: "Sessão expirada!",
   sessionNotFound: "Sessão não encontrada!",
   unauthorizedAccess: "Acesso não autorizado!",
+  rewardAlreadyRescued: "Você já resgatou esta recompensa e ainda não usou!",
   internalServerError: "Erro interno no servidor!",
   deliveryNotFound: "Entrega não encontrada!",
   associationNotFound: "Associação não encontrada!",

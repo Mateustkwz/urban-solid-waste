@@ -6,6 +6,10 @@ const getCurrentUser = async () => {
   return userService.getCurrentUser();
 };
 
+const getAllUsers = async () => {
+  return userService.getAllUsers();
+};
+
 const getUserAddresses = async (userId: string) => {
   return userService.getUserAddresses(userId);
 };
@@ -15,18 +19,25 @@ const updateCurrentUser = async (user: User) => {
 };
 
 const addNewAddress = async (address: Address, user: User) => {
+  const updatedAddresses = user.address
+    ? [...user.address, address]
+    : [address];
+
   await updateCurrentUser({
     ...user,
-    address: [...(user.address as Address[]), address],
+    address: updatedAddresses,
   });
 
   return userService.addNewAddress(address, user.id);
 };
 
 const updateAddress = async (address: Address, user: User) => {
+  const updatedAddresses =
+    user.address?.filter((addr) => addr.id !== address.id) || [];
+
   await updateCurrentUser({
     ...user,
-    address: [...(user.address as Address[]), address],
+    address: [...updatedAddresses, address],
   });
 
   return userService.updateCurrentAddress(address, user.id);
@@ -39,6 +50,7 @@ const deleteAllAddresses = async (userId: string) => {
 export {
   addNewAddress,
   deleteAllAddresses,
+  getAllUsers,
   getCurrentUser,
   getUserAddresses,
   updateAddress,

@@ -26,14 +26,18 @@ export default function DeliveryScreen() {
   };
 
   const handleEditDelivery = (delivery: DeliveryType) => {
-    navigation.navigate("DeliveryForm", { delivery });
+    navigation.navigate(
+      delivery.status === "collected" || delivery.status === "cancelled"
+        ? "DeliveryDetails"
+        : "DeliveryForm",
+      { delivery },
+    );
   };
 
   return (
     <View style={styles.deliveryContainer}>
       <FlatList
         data={deliveries}
-        contentContainerStyle={{ gap: Spacing.sm }}
         renderItem={({ item }) => (
           <DeliveryCard
             key={item.id}
@@ -42,7 +46,9 @@ export default function DeliveryScreen() {
           />
         )}
         keyExtractor={(item) => item.id}
-        onEndReachedThreshold={0.5} // triggers when 50% from bottom
+        contentContainerStyle={{
+          paddingBottom: 24,
+        }}
       />
       <TouchableOpacity
         textColor="surface"
@@ -65,6 +71,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.sm,
     position: "relative",
+    overflow: "scroll",
   },
   buttonContainer: {
     width: "50%",

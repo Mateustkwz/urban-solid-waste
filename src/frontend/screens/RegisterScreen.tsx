@@ -86,9 +86,10 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView
+        contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -332,6 +333,10 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
+  content: {
+    flexGrow: 1,
+  },
+
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,

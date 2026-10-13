@@ -1,4 +1,7 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import * as LucideIcons from "lucide-react-native";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -6,8 +9,17 @@ import { useTranslation } from "react-i18next";
 import { Icon } from "@components/ui";
 import { useThemeColor } from "@hooks/useThemeColor";
 import AboutScreen from "@screens/AboutScreen";
+import AssociationScreen from "@screens/AssociationScreen";
 import ProfileScreen from "@screens/ProfileScreen";
 import { Colors } from "@theme/colors";
+
+type TabParamList = {
+  Delivery: undefined;
+  Info: undefined;
+  Profile: undefined;
+};
+
+export type AssociationNavProp = BottomTabNavigationProp<TabParamList>;
 
 const Tab = createBottomTabNavigator();
 
@@ -26,9 +38,6 @@ export const AssociationNavigator = () => {
           switch (route.name) {
             case "Delivery":
               iconName = "Package";
-              break;
-            case "Rewards":
-              iconName = "Gift";
               break;
             case "Profile":
               iconName = "User";
@@ -64,6 +73,11 @@ export const AssociationNavigator = () => {
         headerTitle: t(`common.headerTab.${route.name}`),
       })}
     >
+      <Tab.Screen
+        name="Home"
+        options={{ headerShown: false }}
+        component={AssociationScreen}
+      />
       <Tab.Screen name="Info" component={AboutScreen} />
       <Tab.Screen
         name="Profile"

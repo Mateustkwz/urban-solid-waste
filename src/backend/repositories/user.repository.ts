@@ -4,6 +4,7 @@ import { User } from "@backend-types/user.type";
 import { delay } from "@backend-utils/common.util";
 import {
   convertUserDataToModel,
+  convertUserModelToData,
   searchUserById,
 } from "@backend-utils/userData.util";
 import { UserRole } from "@constants/common";
@@ -27,6 +28,22 @@ const getUserByDocument = async (
   const user = users["@user"][cpfOrCnpj];
 
   return user ?? null;
+};
+
+const getAllUsers = async (): Promise<User[]> => {
+  const data = await AsyncStorage.getItem("@user");
+
+  await delay();
+
+  if (!data) {
+    return [];
+  }
+
+  const users = JSON.parse(data) as UserSchema;
+
+  return Object.values(users["@user"]).map((user) =>
+    convertUserModelToData(user),
+  );
 };
 
 const getUserById = async (userId: string): Promise<UserModel | null> => {
@@ -75,14 +92,10 @@ const createMockUsers = async (usersMock: User[]) => {
   });
 
   await AsyncStorage.setItem("@user", JSON.stringify(users));
-
-  await delay();
 };
 
 const getCurrentUser = async (): Promise<User | null> => {
   const data = await AsyncStorage.getItem("@currentUser");
-
-  await delay();
 
   if (!data) {
     return null;
@@ -105,8 +118,6 @@ const removeCurrentUser = async (): Promise<void> => {
 
 const getUserPoints = async (userId: string) => {
   const data = await AsyncStorage.getItem("@user");
-
-  await delay();
 
   if (!data) {
     return null;
@@ -145,13 +156,13 @@ const updateUserPoints = async (
     points: newPoints,
   };
 
+  await AsyncStorage.setItem("@user", JSON.stringify(users));
+
   return true;
 };
 
 const getAssociations = async () => {
   const data = await AsyncStorage.getItem("@user");
-
-  await delay();
 
   if (!data) {
     return [];
@@ -168,8 +179,6 @@ const getAssociations = async () => {
 
 const getCityHall = async () => {
   const data = await AsyncStorage.getItem("@user");
-
-  await delay();
 
   if (!data) {
     return null;
@@ -192,11 +201,11 @@ const updateAddress = async (user: UserModel, address: AddressModel[]) => {
   users["@user"][user.cpf_or_cnpj].address = address;
 
   await AsyncStorage.setItem("@user", JSON.stringify(users));
-
+  await saveCurrentUser(convertUserModelToData(user));
   await delay();
 };
 
-const updateRewards = async (user: UserModel) => {
+const updateUserByDocument = async (user: UserModel) => {
   const data = await AsyncStorage.getItem("@user");
 
   const users: UserSchema = JSON.parse(data as string);
@@ -204,7 +213,7 @@ const updateRewards = async (user: UserModel) => {
   users["@user"][user.cpf_or_cnpj] = user;
 
   await AsyncStorage.setItem("@user", JSON.stringify(users));
-
+  await saveCurrentUser(convertUserModelToData(user));
   await delay();
 
   return users;
@@ -224,6 +233,7 @@ const deleteAddresses = async (user: UserModel) => {
 
 export default {
   checkExists,
+  getAllUsers,
   getCurrentUser,
   getAssociations,
   getCityHall,
@@ -236,6 +246,6 @@ export default {
   createUser,
   updateAddress,
   deleteAddresses,
-  updateRewards,
+  updateUserByDocument,
   createMockUsers,
 };

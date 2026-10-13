@@ -11,7 +11,6 @@ import {
   View,
 } from "@components/ui";
 import { rescueSelectedReward } from "@frontend-services/reward.service";
-import { updateCurrentUser } from "@frontend-services/user.service";
 import { Reward } from "@frontend-types/reward.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { useThemeColor } from "@hooks/useThemeColor";
@@ -24,7 +23,7 @@ const rewardFiltersType = ["Minhas Recompensas", "Recompensas Disponíveis"];
 
 export default function RewardScreen() {
   const { t } = useTranslation();
-  const { user, userRewards, updateRewards } = useUserStore();
+  const { user, userRewards, updateRewards, updateUser } = useUserStore();
   const { deliveries } = useDeliveryStore();
   const { rewards } = useRewardStore();
 
@@ -53,6 +52,10 @@ export default function RewardScreen() {
   );
 
   const handleReward = (reward: Reward) => {
+    if (rewardsFilter === "Minhas Recompensas") {
+      return;
+    }
+
     setSelectedReward(reward);
     setConfirmRescue(true);
   };
@@ -73,9 +76,10 @@ export default function RewardScreen() {
           user.cpfOrCnpj,
         );
 
-        await updateCurrentUser({
+        updateUser({
           ...user,
-          rewards: [...userRewards, selectedReward],
+          points: updatedUser.points,
+          rewards: [...userRewards, ...updatedUser.rewards],
         });
         updateRewards(updatedUser.rewards);
       }
@@ -98,6 +102,7 @@ export default function RewardScreen() {
     <ScrollView
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
+      style={{ flexGrow: 1 }}
     >
       <View style={styles.container}>
         <LinearGradient
@@ -139,7 +144,7 @@ export default function RewardScreen() {
                 {t("common.word.rescued")}
               </Text>
               <Text variant="h1" color="accent" style={styles.totalRedeemed}>
-                {user.rewards?.length}
+                {userRewards.length}
               </Text>
             </View>
           </View>

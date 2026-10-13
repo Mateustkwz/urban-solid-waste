@@ -96,12 +96,19 @@ enum UserRole {
   CITY_HALL = "CITY_HALL",
 }
 
+const statusPriority = {
+  pending: 1,
+  confirmed: 2,
+  collected: 3,
+  cancelled: 4,
+};
+
 export {
-  aboutText, AddressType,
+  aboutText,
+  AddressType,
   materials,
   materialUnit,
-  months,
-  textRoles,
+  months, statusPriority, textRoles,
   UserRole,
   weekdays
 };

@@ -57,6 +57,7 @@ export const ChipSelector: React.FC<ChipSelectorProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 8,
+    flexGrow: 1,
   },
   button: {
     borderRadius: 20,

@@ -11,15 +11,20 @@ export const ProfilePicture = ({
   height = Spacing.huge * 1.1,
   width = Spacing.huge * 1.1,
   variant = "body",
+  backgroundColor = "primary",
 }: {
   name: string;
   height?: number;
   width?: number;
+  backgroundColor?: keyof typeof Colors.light;
   variant?: keyof typeof Size;
 }) => {
   return (
-    <View style={[styles.picture, { height, width }]}>
-      <Text style={Size[variant]} variant="h1" color="background">
+    <View
+      style={[styles.picture, { height, width }]}
+      background={backgroundColor}
+    >
+      <Text style={Size[variant]} variant="h1" color="surface">
         {nameInitials(name)}
       </Text>
     </View>
@@ -28,7 +33,6 @@ export const ProfilePicture = ({
 
 const styles = StyleSheet.create({
   picture: {
-    backgroundColor: Colors.light.primary,
     borderRadius: Radius.round,
     alignItems: "center",
     justifyContent: "center",

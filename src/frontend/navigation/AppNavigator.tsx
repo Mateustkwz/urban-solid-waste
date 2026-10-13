@@ -5,15 +5,16 @@ import {
 import React from "react";
 
 import { Address } from "@frontend-types/common.type";
+import { DeliveryType } from "@frontend-types/delivery.type";
 import AboutScreen from "@screens/AboutScreen";
 import AddressFormScreen from "@screens/AddressFormScreen";
+import DeliveryDetailsScreen from "@screens/DeliveryDetailsScreen";
 import DeliveryFormScreen from "@screens/DeliveryFormScreen";
 import MyAddresses from "@screens/MyAddressesScreen";
+import RegisteredAssociationsScreen from "@screens/RegisteredAssociationsScreen";
 import SelectRole from "@screens/SelectRole";
+import { useUserStore } from "@store/userStore";
 
-import { useUserStore } from "../store/userStore";
-
-import { DeliveryType } from "@frontend-types/delivery.type";
 import { AssociationNavigator } from "./AssociationNavigator";
 import { CitizenNavigator } from "./CitizenNavigator";
 import { CityHallNavigator } from "./CityHallNavigator";
@@ -22,8 +23,10 @@ export type AppNavigationList = {
   Main: undefined;
   About: undefined;
   DeliveryForm: { delivery?: DeliveryType };
+  DeliveryDetails: { delivery?: DeliveryType };
   AddressForm: { address?: Address };
   MyAddresses: undefined;
+  RegisteredAssociations: undefined;
 };
 
 export type AppNavProp = NativeStackNavigationProp<AppNavigationList>;
@@ -76,6 +79,16 @@ export const AppNavigator = () => {
         })}
       />
 
+      {/* Delivery Details screen */}
+      <RootStack.Screen
+        name="DeliveryDetails"
+        component={DeliveryDetailsScreen}
+        options={() => ({
+          presentation: "modal",
+          title: "Detalhes da Entrega",
+        })}
+      />
+
       {/* Address Form screen */}
       <RootStack.Screen
         name="AddressForm"
@@ -93,6 +106,13 @@ export const AppNavigator = () => {
         name="MyAddresses"
         component={MyAddresses}
         options={{ title: "Meus Endereços" }}
+      />
+
+      {/* Registered Associations screen */}
+      <RootStack.Screen
+        name="RegisteredAssociations"
+        component={RegisteredAssociationsScreen}
+        options={{ title: "Associações Cadastradas" }}
       />
     </RootStack.Navigator>
   );

@@ -12,6 +12,7 @@ interface UserModel {
   points: number;
   rewards?: RewardModel[];
   address?: AddressModel[];
+  block?: boolean;
 }
 
 export { UserModel };

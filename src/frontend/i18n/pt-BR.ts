@@ -43,7 +43,7 @@ export default {
       or: "Ou",
       about: "Sobre",
       and: "e",
-      optional: "Opicional",
+      optional: "Opcional",
       pts: "pts",
       collect: "Coleta",
       confirmed: "Confirmado",
@@ -61,6 +61,7 @@ export default {
       back: "Voltar",
       rewards: "Recompensas",
       rescued: "Resgatados",
+      collects: "Coletas",
     },
     headerTab: {
       Delivery: "Minhas Entregas",
@@ -69,6 +70,9 @@ export default {
       Info: "Info",
       Rewards: "Recompensas",
       NewDeliveryScreen: "Nova Entrega",
+      Users: "Gerenciar Usuários",
+      Associations: "Gerenciar Associações",
+      CityHall: "Gerenciar Recompensas",
     },
     bottomTab: {
       NewDeliveryScreen: "Nova Entrega",
@@ -77,6 +81,9 @@ export default {
       Profile: "Perfil",
       Info: "Info",
       Rewards: "Prêmios",
+      Users: "Usuários",
+      Associations: "Associações",
+      CityHall: "Recompensas",
     },
   },
   login: {
@@ -105,11 +112,17 @@ export default {
     nextDelivery: "Próxima Coleta",
     recentDeliveries: "Entregas Recentes",
   },
+  association: {
+    deliveriesInfo: "Informações das Coletas realizadas",
+    nextPickups: "Próximas Coletas",
+  },
   profile: {
     level: "🌱 {{level}}",
     nextLevelRequirement: "pontos para o próximo nível",
     nextLevelInfo: "{{points}} pontos para {{nextLevel}} 🌳",
     myAddresses: "Endereços salvos",
+    associations: "Associações cadastradas",
+    info: "Informações",
   },
   delivery: {
     newDelivery: "Nova Entrega",
@@ -117,6 +130,7 @@ export default {
     submit: "Registrar nova entrega",
     edit: "Salvar alterações",
     home: "Coleta domiciliar",
+    cancel: "Cancelar entrega",
     association: "Entregar na associação",
     method: {
       home: "Endereço de Coleta",
@@ -167,6 +181,7 @@ export default {
       newDelivery: "Erro ao criar nova entrega",
       editDelivery: "Erro ao editar entrega",
       rewardRescue: "Erro ao resgatar recompensa",
+      updateDeliveryStatus: "Erro ao atualizar status da entrega",
     },
   },
   splash: {

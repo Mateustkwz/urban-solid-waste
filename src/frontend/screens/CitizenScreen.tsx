@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from "@components/ui";
-import { materials } from "@constants/common";
+import { materials, statusPriority } from "@constants/common";
 import { DeliveryType } from "@frontend-types/delivery.type";
 import { formatSchedule } from "@frontend-utils/date.util";
 import { getEcoLevel } from "@frontend-utils/points.util";
@@ -33,6 +33,7 @@ export default function CitizenScreen() {
     () => deliveries.filter((deliv) => deliv.status === "collected"),
     [deliveries],
   );
+
   const userTotalPoints = useMemo(
     () =>
       (user?.points || 0) +
@@ -40,12 +41,42 @@ export default function CitizenScreen() {
     [user, deliveredOnes],
   );
 
+  const nextDelivery = useMemo(() => {
+    const pendingDeliveries = deliveries.filter(
+      (item) => item.status === "pending" || item.status === "confirmed",
+    );
+
+    return pendingDeliveries.length ? pendingDeliveries[0] : null;
+  }, [deliveries]);
+
+  const orderedDeliveries = useMemo(
+    () =>
+      deliveries.sort((a, b) => {
+        const priorityA =
+          statusPriority[a.status as keyof typeof statusPriority];
+        const priorityB =
+          statusPriority[b.status as keyof typeof statusPriority];
+
+        if (a.status === "delivery" || b.status === "delivery") {
+          return 0;
+        }
+
+        return priorityA - priorityB;
+      }),
+    [deliveries],
+  );
+
   const handleProfile = () => {
     citizenNavigation.navigate("Profile");
   };
 
-  const handleEditDelivery = (delivery: DeliveryType) => {
-    appNavigation.navigate("DeliveryForm", { delivery });
+  const handleDelivery = (delivery: DeliveryType) => {
+    appNavigation.navigate(
+      delivery.status === "collected" || delivery.status === "cancelled"
+        ? "DeliveryDetails"
+        : "DeliveryForm",
+      { delivery },
+    );
   };
 
   if (!user) {
@@ -56,6 +87,7 @@ export default function CitizenScreen() {
     <ScrollView
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
+      style={{ flexGrow: 1 }}
     >
       <View style={styles.container}>
         <LinearGradient
@@ -116,42 +148,47 @@ export default function CitizenScreen() {
             </Text>
           </View>
         </LinearGradient>
-        {deliveries.length ? (
+        {orderedDeliveries.length ? (
           <View style={styles.contentContainer}>
-            <Text variant="h2" style={Size.body}>
-              {t("citizen.nextDelivery")}
-            </Text>
+            {nextDelivery ? (
+              <>
+                <Text variant="h2" style={Size.body}>
+                  {t("citizen.nextDelivery")}
+                </Text>
 
-            <View
-              style={styles.nextDeliveryContainer}
-              background="componentBackground"
-            >
-              <View style={styles.nextDeliveryIcon} background="primary">
-                <Icon name="Truck" />
-              </View>
-              <View style={styles.nextDeliveryContent}>
-                <Text variant="h1" style={Size.body}>
-                  {`${t("common.word.collect")} ${t("common.word.schedulled")}`}
-                </Text>
-                <Text color="textSecondary" style={Size.caption}>
-                  {formatSchedule(deliveries[0].deliveryDate)}
-                </Text>
-                <View style={styles.nextDeliveryChipsContainer}>
-                  {deliveries[0].material.map((material) => (
-                    <Chip key={material} {...materials[material]} />
-                  ))}
+                <View
+                  style={styles.nextDeliveryContainer}
+                  background="componentBackground"
+                >
+                  <View style={styles.nextDeliveryIcon} background="primary">
+                    <Icon name="Truck" />
+                  </View>
+                  <View style={styles.nextDeliveryContent}>
+                    <Text variant="h1" style={Size.body}>
+                      {`${t("common.word.collect")} ${t("common.word.schedulled")}`}
+                    </Text>
+                    <Text color="textSecondary" style={Size.caption}>
+                      {formatSchedule(nextDelivery.deliveryDate)}
+                    </Text>
+                    <View style={styles.nextDeliveryChipsContainer}>
+                      {nextDelivery.material.map((material) => (
+                        <Chip key={material} {...materials[material]} />
+                      ))}
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
+              </>
+            ) : null}
+
             <View style={styles.recentDeliveriesContainer}>
               <Text variant="h2" style={Size.body}>
                 {t("citizen.recentDeliveries")}
               </Text>
-              {deliveries.map((delivery) => (
+              {orderedDeliveries.map((delivery) => (
                 <DeliveryCard
                   key={delivery.id}
                   data={delivery}
-                  handleDelivery={handleEditDelivery}
+                  handleDelivery={handleDelivery}
                 />
               ))}
             </View>
