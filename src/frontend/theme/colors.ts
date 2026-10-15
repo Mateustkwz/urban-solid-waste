@@ -11,6 +11,7 @@ export const palette = {
 
   text: "#1B1F1A",
   textSecondary: "#5F685C",
+  textLight: "#c5c5c5",
   icon: "#687263",
 
   success: "#43A047",
@@ -20,12 +21,21 @@ export const palette = {
   border: "#DDE5DA",
   inputBackground: "#f1f1f1",
 
-  citizenBackground: "#E6F4EA", // verde claro
-  citizenIcon: "#2E7D32", // verde escuro
-  associationBackground: "#E6F0FA", // azul claro
-  associationIcon: "#1565C0", // azul médio
-  cityHallBackground: "#F3E8F9", // roxo claro
+  darkRed: "#a33030",
+  orange: "#F28C38",
+  orangeBackground: "#F5E9D7",
+  citizenBackground: "#E6F4EA",
+  citizenIcon: "#2E7D32",
+  associationBackground: "#E6F0FA",
+  associationIcon: "#1565C0",
+  cityHallBackground: "#F3E8F9",
   cityHallIcon: "#6A1B9A",
+  red: "#D32F2F",
+  redBackground: "#FDECEA",
+  yellow: "#FBC02D",
+  yellowBackground: "#FFF9E6",
+  brown: "#6D4C41",
+  brownBackground: "#F3EDEB",
 } as const;
 
 export const Colors = {
@@ -48,6 +58,7 @@ export const Colors = {
 
     text: "#F1F5EF",
     textSecondary: "#B7C1B3",
+    textLight: "#ccd5c8",
     icon: "#AAB5A6",
 
     success: "#66BB6A",
@@ -63,11 +74,20 @@ export const Colors = {
     inputBackground: "#3d3636",
     transparent: palette.transparent,
 
+    darkRed: "#781616",
+    orange: "#bf671f",
+    orangeBackground: "#f5c689",
     citizenBackground: "rgba(46, 125, 50, 0.2)", // verde translúcido
     citizenIcon: "#81C784", // verde claro
     associationBackground: "rgba(21, 101, 192, 0.2)", // azul translúcido
     associationIcon: "#64B5F6", // azul claro
     cityHallBackground: "rgba(106, 27, 154, 0.2)", // roxo translúcido
     cityHallIcon: "#BA68C8",
+    red: "#a01818",
+    redBackground: "#f8a9a0",
+    yellow: "#b78d22",
+    yellowBackground: "#f9dd7e",
+    brown: "#68392a",
+    brownBackground: "#b2958b",
   },
 } as const;

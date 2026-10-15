@@ -1,5 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
 
+import AboutScreen from "@screens/AboutScreen";
 import LoginScreen from "@screens/LoginScreen";
 import RegisterScreen from "@screens/RegisterScreen";
 
@@ -19,6 +21,8 @@ export const AuthNavigator = () => {
         component={RegisterScreen}
         options={{ headerShown: false }}
       />
+
+      <Stack.Screen name="Info" component={AboutScreen} />
     </Stack.Navigator>
   );
 };

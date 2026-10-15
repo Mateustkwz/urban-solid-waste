@@ -3,8 +3,19 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 type AuthStackParamList = {
   Login: undefined;
   Register: undefined;
+  Info: undefined;
 };
 
-type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
+type AuthNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  "Login"
+>;
 
-export { NavigationProp };
+type AppStackParamList = {
+  Main: undefined;
+  DeliveryForm: undefined;
+};
+
+type AppNavigationProp = NativeStackNavigationProp<AppStackParamList, "Main">;
+
+export { AppNavigationProp, AuthNavigationProp };

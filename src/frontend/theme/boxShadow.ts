@@ -13,4 +13,11 @@ export const Shadows = {
     shadowRadius: 6,
     elevation: 6,
   },
+  cardLight: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1.5, // Android
+  },
 } as const;

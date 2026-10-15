@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
@@ -13,11 +13,12 @@ import {
   TouchableOpacity,
   View,
 } from "@components/ui";
-import { login } from "@frontend-services/user.service";
-import { NavigationProp } from "@frontend-types/navigation.type";
+import { login, saveToken } from "@frontend-services/auth.service";
+import { AuthNavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCNPJ, isValidCPF } from "@frontend-utils/userValidation.util";
-import { useAuthStore } from "@store/authStore";
+import { useLoadData } from "@hooks/useLoadData";
+import { useUserStore } from "@store/userStore";
 import { Colors, Radius, Spacing } from "@theme/index";
 
 type LoginFormData = {
@@ -27,8 +28,10 @@ type LoginFormData = {
 
 export default function LoginScreen() {
   const { t } = useTranslation();
-  const navigation = useNavigation<NavigationProp>();
-  const authStore = useAuthStore();
+  const { loadData } = useLoadData();
+  const navigation = useNavigation<AuthNavigationProp>();
+  const authStore = useUserStore();
+
   const [loading, setLoading] = useState(false);
 
   const {
@@ -44,23 +47,34 @@ export default function LoginScreen() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
+    try {
       const response = await login(data.document, data.password);
 
-      if (!response.currentRole && response.role.length === 1) {
-        response.currentRole = response.role[0];
+      if (!response.user.currentRole && response.user.role.length === 1) {
+        response.user.currentRole = response.user.role[0];
       }
 
-      setLoading(false);
+      if (response.user.block) {
+        throw new Error("Usuário Bloqueado, entre em contato com o suporte!");
+      }
 
-      authStore.login(response);
+      await loadData();
+      authStore.login(response.user);
+      await saveToken(response.token);
     } catch (error) {
       showToast("error", t("error.title.login"), handleErrorMessage(error));
-      setLoading(false);
     }
+
+    setLoading(false);
   };
+
+  // const handleResetMock = async () => {
+  //   await AsyncStorage.removeItem("@app:hasOpened");
+  //   await AsyncStorage.setItem("@user", "");
+  //   console.log("Limpo");
+  // };
 
   const handleRegister = () => {
     navigation.navigate("Register");
@@ -78,8 +92,8 @@ export default function LoginScreen() {
         style={styles.header}
         colors={["primary", "primaryLight"]}
       >
-        <View background="transparent" style={styles.dflex}>
-          <View background="transparent" style={styles.iconHeaderContainer}>
+        <View style={styles.dflex}>
+          <View style={styles.iconHeaderContainer}>
             <View style={styles.iconHeaderbackground} />
             <Icon
               name="Recycle"
@@ -97,7 +111,7 @@ export default function LoginScreen() {
         </Text>
       </LinearGradient>
 
-      <View style={styles.form}>
+      <View style={styles.form} background="background">
         <Text variant="h1" style={styles.formTitle}>
           {t("login.title")}
         </Text>
@@ -146,6 +160,7 @@ export default function LoginScreen() {
               placeholder="••••••••"
               secureteIcon
               value={value}
+              autoCapitalize="none"
               errorMessage={errors.password?.message}
               onChangeText={(value) => {
                 onChange(value);
@@ -155,9 +170,26 @@ export default function LoginScreen() {
           )}
         />
 
-        <TextButton fontWeight="700" style={styles.forgotPassword}>
-          {t("login.forgotPassword")}
-        </TextButton>
+        <View style={styles.forgotPasswordAndAboutContainer}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Icon name="Info" color="associationIcon" size={18} />
+            <TextButton
+              onPress={() => navigation.navigate("Info")}
+              color="associationIcon"
+              fontWeight="700"
+              paddingHorizontal={Spacing.sm}
+            >
+              {t("common.word.about")}
+            </TextButton>
+          </View>
+
+          <TextButton fontWeight="700">{t("login.forgotPassword")}</TextButton>
+        </View>
 
         <TouchableOpacity
           style={styles.button}
@@ -169,7 +201,7 @@ export default function LoginScreen() {
           </Text>
         </TouchableOpacity>
 
-        <View style={styles.lineContainer}>
+        <View style={styles.lineContainer} background="background">
           <View style={styles.line} background="border" />
           <Text
             variant="bodySmall"
@@ -206,6 +238,7 @@ export default function LoginScreen() {
           <Text
             style={[styles.disclaimer, styles.termsAndPolicies]}
             color="primary"
+            // onPress={handleResetMock}
           >
             {t("common.policies")}
           </Text>
@@ -236,8 +269,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   iconHeaderbackground: {
-    height: Spacing.huge,
-    width: Spacing.huge,
+    height: Spacing.xxxl,
+    width: Spacing.xxxl,
     borderRadius: Radius.lg,
     opacity: 0.2,
   },
@@ -259,9 +292,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     marginBottom: Spacing.xl,
   },
-  forgotPassword: {
-    textAlign: "right",
-    marginBottom: Spacing.xxl, // antes: 24
+  forgotPasswordAndAboutContainer: {
+    marginBottom: Spacing.lg,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   button: {
     padding: Spacing.md, // antes: 14

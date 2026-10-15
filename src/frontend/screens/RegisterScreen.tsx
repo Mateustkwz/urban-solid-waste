@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,8 +18,8 @@ import {
   View,
 } from "@components/ui";
 import { textRoles, UserRole } from "@constants/common";
-import { register } from "@frontend-services/user.service";
-import { NavigationProp } from "@frontend-types/navigation.type";
+import { register } from "@frontend-services/auth.service";
+import { AuthNavigationProp } from "@frontend-types/navigation.type";
 import { handleErrorMessage, showToast } from "@frontend-utils/common.util";
 import { isValidCPF } from "@frontend-utils/userValidation.util";
 import { Colors, Radius, Spacing } from "@theme/index";
@@ -35,7 +35,7 @@ type RegisterFormData = {
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<AuthNavigationProp>();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -66,7 +66,6 @@ export default function RegisterScreen() {
         email: data.email.trim().toLowerCase(),
         password: data.password,
         role: [data.role],
-        address: "",
         points: data.role === "CITIZEN" ? 0 : undefined,
         currentRole: data.role,
       });
@@ -87,14 +86,15 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView
+        contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
+        <View style={styles.header} background="background">
           <TouchableOpacity
             style={styles.backButton}
             backgroundColor="componentBackground"
@@ -123,7 +123,7 @@ export default function RegisterScreen() {
             <Icon name="Camera" size={Spacing.xl} color="primary" />
           </View>
 
-          <View style={styles.profileTextContainer} background="transparent">
+          <View style={styles.profileTextContainer}>
             <Text variant="bodySemiBold">{t("register.profilePhoto")}</Text>
 
             <Text variant="bodySmall" color="textSecondary">
@@ -132,7 +132,7 @@ export default function RegisterScreen() {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.form}>
+        <View style={styles.form} background="background">
           {/* Name */}
           <Controller
             control={control}
@@ -151,6 +151,7 @@ export default function RegisterScreen() {
                 placeholder="João Silva Magri"
                 value={value}
                 required
+                autoCapitalize="words"
                 iconColor="icon"
                 errorMessage={errors.name?.message}
                 onChangeText={(value) => {
@@ -248,6 +249,7 @@ export default function RegisterScreen() {
                 value={value}
                 required
                 iconColor="icon"
+                autoCapitalize="none"
                 errorMessage={errors.password?.message}
                 //   helperText={t("register.minimumPassword")}
                 onChangeText={(value) => {
@@ -263,11 +265,16 @@ export default function RegisterScreen() {
             control={control}
             name="role"
             render={({ field: { onChange, value } }) => (
+              // <RadioSelect
+              //   options={Object.entries(textRoles).map((role) => ({
+              //     value: role[0],
+              //     label: role[1],
+              //   }))}
+              //   onChange={onChange}
+              //   selected={value}
+              // />
               <RadioSelect
-                options={Object.entries(textRoles).map((role) => ({
-                  value: role[0],
-                  label: role[1],
-                }))}
+                options={[{ label: textRoles.CITIZEN, value: "CITIZEN" }]}
                 onChange={onChange}
                 selected={value}
               />
@@ -276,7 +283,7 @@ export default function RegisterScreen() {
         </View>
 
         {/* Terms */}
-        <View style={styles.footer}>
+        <View style={styles.footer} background="background">
           <TouchableOpacity
             style={styles.termsContainer}
             backgroundColor="componentBackground"
@@ -326,6 +333,10 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
+  content: {
+    flexGrow: 1,
+  },
+
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,

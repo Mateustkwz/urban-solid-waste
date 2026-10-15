@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
@@ -9,18 +9,6 @@ import { Colors, Radius, Spacing } from "@theme/index";
 export default function SplashScreen() {
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const bootstrap = async () => {
-      // TODO:
-      // - Load fonts
-      // - Seed AsyncStorage
-      // - Restore user session
-      // - Navigate to Auth or App
-    };
-
-    bootstrap();
-  }, []);
-
   return (
     <LinearGradient
       colors={[Colors.light.primary, Colors.light.secondary]}
@@ -29,14 +17,14 @@ export default function SplashScreen() {
       style={styles.container}
     >
       {/* Recycling Icon */}
-      <View style={styles.iconBackground}>
-        <View style={styles.iconWrapper}>
+      <View style={styles.iconBackground} background="background">
+        <View style={styles.iconWrapper} background="background">
           <Icon name="Recycle" size={64} />
         </View>
       </View>
 
       {/* Title */}
-      <View style={styles.titleWrapper}>
+      <View style={styles.titleWrapper} background="background">
         <Text variant="h1" style={styles.title}>
           {t("splash.titleUrban")}
         </Text>
@@ -46,71 +34,71 @@ export default function SplashScreen() {
       </View>
 
       {/* Illustration */}
-      <View style={styles.illustration}>
+      <View style={styles.illustration} background="background">
         <View
+          background="background"
           style={[
             styles.body,
             {
               left: 35,
               height: 85,
-              backgroundColor: Colors.light.background,
               opacity: 0.2,
             },
           ]}
         />
         <View
+          background="background"
           style={[
             styles.body,
             {
               left: 80,
               height: 100,
-              backgroundColor: Colors.light.background,
               opacity: 0.2,
             },
           ]}
         />
         <View
+          background="background"
           style={[
             styles.body,
             {
               left: 125,
               height: 70,
-              backgroundColor: Colors.light.background,
               opacity: 0.2,
             },
           ]}
         />
         <View
+          background="secondary"
           style={[
             styles.head,
             {
               left: 46,
               top: -Spacing.sm,
-              backgroundColor: Colors.light.secondary,
               width: 30,
               height: 30,
             },
           ]}
         />
         <View
+          background="accent"
           style={[
             styles.head,
             {
               left: 88,
               top: Spacing.xs,
-              backgroundColor: Colors.light.accent,
               width: 24,
               height: 24,
             },
           ]}
         />
         <View
+          background="background"
           style={[
             styles.head,
             {
               left: 136,
               top: Spacing.xl,
-              backgroundColor: Colors.light.background,
               opacity: 0.7,
               width: 18,
               height: 18,

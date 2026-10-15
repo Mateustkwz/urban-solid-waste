@@ -1,40 +1,45 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  useFonts,
+} from "@expo-google-fonts/inter";
+import { Nunito_600SemiBold, Nunito_700Bold } from "@expo-google-fonts/nunito";
+import React, { useEffect, useState } from "react";
 
+import { useLoadData } from "@hooks/useLoadData";
 import SplashScreen from "@screens/SplashScreen";
-import { useAuthStore } from "@store/authStore";
+import { useUserStore } from "@store/userStore";
 
 import { AppNavigator } from "./AppNavigator";
 import { AuthNavigator } from "./AuthNavigator";
 
-const Stack = createNativeStackNavigator();
-
 export const RootNavigator = () => {
-  const { isAuthenticated } = useAuthStore();
+  const [fontsLoaded, fontError] = useFonts({
+    "Nunito-Bold": Nunito_700Bold,
+    "Nunito-SemiBold": Nunito_600SemiBold,
+    "Inter-Regular": Inter_400Regular,
+    "Inter-Medium": Inter_500Medium,
+    "Inter-SemiBold": Inter_600SemiBold,
+  });
+  const { loadData } = useLoadData();
+  const { isAuthenticated } = useUserStore();
 
-  const [showSplash, setShowSplash] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const loadInitialData = async () => {
+    await loadData();
+
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
+    loadInitialData();
   }, []);
 
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {showSplash ? (
-        <Stack.Screen name="Splash" component={SplashScreen} />
-      ) : (
-        <>
-          {!isAuthenticated ? (
-            <Stack.Screen name="Auth" component={AuthNavigator} />
-          ) : (
-            <Stack.Screen name="App" component={AppNavigator} />
-          )}
-        </>
-      )}
-    </Stack.Navigator>
-  );
+  if (isLoading || (!fontsLoaded && !fontError)) {
+    return <SplashScreen />;
+  }
+
+  return isAuthenticated ? <AppNavigator /> : <AuthNavigator />;
 };

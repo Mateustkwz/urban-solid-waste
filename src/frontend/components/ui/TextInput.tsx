@@ -1,5 +1,5 @@
 import * as LucideIcons from "lucide-react-native";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   TextInput as RNTextInput,
   StyleSheet,
@@ -61,10 +61,10 @@ export const TextInput = ({
       )}
       {!!icon && (
         <Icon
-          style={[styles.icon, styles.customIcon]}
+          style={[styles.icon, styles.customIcon, { top: label ? 40 : 16 }]}
           name={icon}
           color={iColor}
-          size={18}
+          size={20}
         />
       )}
       <RNTextInput
@@ -88,7 +88,7 @@ export const TextInput = ({
           <Icon
             style={styles.errorIcon}
             name="TriangleAlert"
-            color={errorColor}
+            color="error"
             size={18}
           />
           <Text style={styles.errorMessage} variant="bodySmall" color="error">
@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
   },
   customIcon: {
     left: 12,
-    top: 42,
   },
   secureteIcon: {
     top: 38,

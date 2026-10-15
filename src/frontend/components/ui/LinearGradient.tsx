@@ -1,5 +1,6 @@
 // LinearGradient.tsx
 import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
+import React from "react";
 import { StyleSheet, type ViewProps } from "react-native";
 
 import { useThemeColors } from "@hooks/useThemeColors";

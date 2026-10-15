@@ -6,12 +6,14 @@ import { UserRole } from "@constants/common";
 import {
   createBadRequestError,
   createConflictError,
-  createInternalServerError,
   createNotFoundError,
   errorMessages,
 } from "@constants/errors";
 import { RegisterSchema } from "@models/schemas/auth.schema";
 import authRepository from "@repositories/auth.repository";
+import userRepository from "@repositories/user.repository";
+import { associationMock } from "@storage/mock/associations.mock";
+import rewardService from "./reward.service";
 
 import userService from "./user.service";
 
@@ -45,28 +47,15 @@ const createAccount = async (user: User): Promise<void> => {
     password: await encryptPassword(user.password),
   };
 
-  await userService.saveUser(newUser);
-
-  const currentUser: User = {
-    ...newUser,
-    password: "",
-  };
-
-  try {
-    await userService.saveCurrentUser(currentUser);
-    await authRepository.createSession(currentUser.id);
-  } catch (error) {
-    throw new Error(
-      createInternalServerError(errorMessages.internalServerError + error),
-    );
-  }
+  await userService.createUser(newUser);
 };
 
 const userAuthentication = async (
   cpfOrCnpj: string,
   password: string,
-): Promise<User> => {
+): Promise<{ user: User; token: string }> => {
   const isValidDocument = isValidCPF(cpfOrCnpj) || isValidCNPJ(cpfOrCnpj);
+
   if (!isValidDocument) {
     throw new Error(createConflictError(errorMessages.invalidDocument));
   }
@@ -75,11 +64,14 @@ const userAuthentication = async (
 
   try {
     user = await userService.getUserByDocument(cpfOrCnpj);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     if (!user) {
       throw new Error(createNotFoundError(errorMessages.userNotRegistered));
     }
+  }
+
+  if (user.block) {
+    throw new Error(createConflictError(errorMessages.blockedUser));
   }
 
   if (user?.password !== (await encryptPassword(password))) {
@@ -91,9 +83,10 @@ const userAuthentication = async (
     password: "",
   };
 
-  await authRepository.createSession(currentUser.id);
+  const session = await authRepository.createSession(currentUser.id);
+  await userService.saveCurrentUser(currentUser);
 
-  return currentUser;
+  return { user: currentUser, token: session.token };
 };
 
 const userSelectRole = async (role: UserRole) => {
@@ -121,10 +114,30 @@ const logout = async (userId: string): Promise<void> => {
   await userService.removeCurrentUser();
 };
 
+const mockFirstLogin = async () => {
+  const isFirstLogin = await authRepository.isFirstLaunch();
+  const associations = [];
+
+  for (const association of associationMock) {
+    const associationPasswordEncrypted = {
+      ...association,
+      password: await encryptPassword(association.password),
+    };
+
+    associations.push(associationPasswordEncrypted);
+  }
+
+  if (isFirstLogin) {
+    await userRepository.createMockUsers(associations as User[]);
+    await rewardService.loadMockRewards();
+  }
+};
+
 export default {
   checkTokenValidity,
   createAccount,
   logout,
   userAuthentication,
   userSelectRole,
+  mockFirstLogin,
 };

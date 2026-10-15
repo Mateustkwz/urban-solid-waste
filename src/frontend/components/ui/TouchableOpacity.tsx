@@ -1,4 +1,5 @@
 // TouchableOpacity.tsx
+import React from "react";
 import {
   ActivityIndicator,
   TouchableOpacity as RNTouchableOpacity,
@@ -10,6 +11,9 @@ import { useThemeColor } from "@hooks/useThemeColor";
 import type { Colors } from "@theme/index";
 
 export type ButtonProps = RNTouchableOpacityProps & {
+  borderRadius?: number;
+  padding?: number;
+  justifyContent?: string;
   backgroundColor?: keyof typeof Colors.light;
   borderColor?: keyof typeof Colors.light;
   textColor?: keyof typeof Colors.light;
@@ -20,8 +24,11 @@ export const TouchableOpacity = ({
   style,
   backgroundColor = "primary",
   borderColor = "transparent",
+  borderRadius = 8,
   textColor = "surface",
+  justifyContent = "center",
   isLoading = false,
+  padding = 24,
   ...props
 }: ButtonProps) => {
   const bg = useThemeColor(backgroundColor);
@@ -30,7 +37,24 @@ export const TouchableOpacity = ({
 
   return (
     <RNTouchableOpacity
-      style={[styles.base, { backgroundColor: bg, borderColor: bc }, style]}
+      style={[
+        styles.base,
+        {
+          backgroundColor: bg,
+          borderColor: bc,
+          borderRadius: borderRadius,
+          padding,
+          justifyContent: justifyContent as
+            | "center"
+            | "flex-start"
+            | "flex-end"
+            | "space-between"
+            | "space-around"
+            | "space-evenly"
+            | undefined,
+        },
+        style,
+      ]}
       activeOpacity={0.8}
       disabled={isLoading}
       {...props}
@@ -46,9 +70,6 @@ export const TouchableOpacity = ({
 
 const styles = StyleSheet.create({
   base: {
-    padding: 14,
-    borderRadius: 8,
     alignItems: "center",
-    justifyContent: "center",
   },
 });

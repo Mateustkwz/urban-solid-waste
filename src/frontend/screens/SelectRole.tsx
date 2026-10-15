@@ -1,19 +1,20 @@
 import * as LucideIcons from "lucide-react-native";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
 import { Icon, Text, TouchableOpacity, View } from "@components/ui";
 import { UserRole } from "@constants/common";
-import { useAuthStore } from "@store/authStore";
+import { useUserStore } from "@store/userStore";
 import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
 export default function SelectRoleScreen() {
   const { t } = useTranslation();
-  const { user, currentRole } = useAuthStore();
+  const authStore = useUserStore();
 
   const handleSelectRole = (role: UserRole) => {
-    if (user) {
-      currentRole(user, role);
+    if (authStore.user) {
+      authStore.setCurrentRole(authStore.user, role);
     }
   };
 
@@ -34,7 +35,7 @@ export default function SelectRoleScreen() {
       icon: "Building2",
     },
   ].filter((item) => {
-    if (user && user.role.includes(item.role)) {
+    if (authStore.user && authStore.user.role.includes(item.role)) {
       return true;
     }
 
@@ -42,7 +43,7 @@ export default function SelectRoleScreen() {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} background="background">
       <View style={styles.header} background="background">
         <View background="primary" style={styles.iconHeaderContainer}>
           <Icon name="Recycle" size={Spacing.huge} style={styles.iconHeader} />
