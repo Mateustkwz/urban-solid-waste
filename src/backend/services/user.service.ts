@@ -34,6 +34,7 @@ const getUserByDocument = async (cpfOrCnpj: string): Promise<User> => {
     cpfOrCnpj: user.cpf_or_cnpj,
     points: user.points,
     rewards: user.rewards ? user.rewards.map((item) => toRewardData(item)) : [],
+    block: user.block,
   };
 };
 
@@ -92,8 +93,12 @@ const blockUser = async (userId: string) => {
     throw new Error(createNotFoundError(errorMessages.userNotFound));
   }
 
-  return userRepository.updateUserByDocument(
+  const updatedUsers = await userRepository.updateUserByDocument(
     convertUserDataToModel({ ...user, block: true }),
+  );
+
+  return Object.values(updatedUsers["@user"]).map((user) =>
+    convertUserModelToData(user),
   );
 };
 
@@ -104,8 +109,12 @@ const unblockUser = async (userId: string) => {
     throw new Error(createNotFoundError(errorMessages.userNotFound));
   }
 
-  return userRepository.updateUserByDocument(
+  const updatedUsers = await userRepository.updateUserByDocument(
     convertUserDataToModel({ ...user, block: false }),
+  );
+
+  return Object.values(updatedUsers["@user"]).map((user) =>
+    convertUserModelToData(user),
   );
 };
 

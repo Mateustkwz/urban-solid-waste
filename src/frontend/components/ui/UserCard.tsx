@@ -2,14 +2,26 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
+import { UserRole } from "@constants/common";
 import { Address } from "@frontend-types/common.type";
 import { User } from "@frontend-types/user.type";
+import { useThemeColor } from "@hooks/useThemeColor";
 import { Colors, Radius, Shadows, Size, Spacing } from "@theme/index";
 
-import { useThemeColor } from "@hooks/useThemeColor";
 import { ProfilePicture, Text, View } from "./";
 
-export const UserCard = ({ data }: { data: User }) => {
+const colorsByRole: { [key: string]: keyof typeof Colors.light } = {
+  ASSOCIATION: "cityHallIcon",
+  CITIZEN: "associationIcon",
+};
+
+export type UserCardProps = {
+  data: User;
+  role: UserRole;
+  setCurrentUser: (user: User) => void;
+};
+
+export const UserCard = ({ data, role, setCurrentUser }: UserCardProps) => {
   const { t } = useTranslation();
 
   const bc = useThemeColor(data.block ? "redBackground" : "background");
@@ -17,6 +29,10 @@ export const UserCard = ({ data }: { data: User }) => {
   if (!data.address || data.address.length === 0) {
     return null;
   }
+
+  const handleUser = () => {
+    setCurrentUser(data);
+  };
 
   const adress = data.address[0] as Address & {
     phoneNumber?: string;
@@ -29,9 +45,10 @@ export const UserCard = ({ data }: { data: User }) => {
         data.block && styles.blocked,
         { backgroundColor: bc },
       ]}
+      onPress={handleUser}
     >
       <View style={styles.userIcon}>
-        <ProfilePicture name={data.name} backgroundColor={"associationIcon"} />
+        <ProfilePicture name={data.name} backgroundColor={colorsByRole[role]} />
       </View>
       <View style={styles.userContent}>
         <Text variant="h1" style={Size.body}>

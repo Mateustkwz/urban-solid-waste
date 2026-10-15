@@ -28,9 +28,10 @@ type LoginFormData = {
 
 export default function LoginScreen() {
   const { t } = useTranslation();
+  const { loadData } = useLoadData();
   const navigation = useNavigation<AuthNavigationProp>();
   const authStore = useUserStore();
-  const { loadData } = useLoadData();
+
   const [loading, setLoading] = useState(false);
 
   const {
@@ -53,6 +54,10 @@ export default function LoginScreen() {
 
       if (!response.user.currentRole && response.user.role.length === 1) {
         response.user.currentRole = response.user.role[0];
+      }
+
+      if (response.user.block) {
+        throw new Error("Usuário Bloqueado, entre em contato com o suporte!");
       }
 
       await loadData();
@@ -264,8 +269,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   iconHeaderbackground: {
-    height: Spacing.huge,
-    width: Spacing.huge,
+    height: Spacing.xxxl,
+    width: Spacing.xxxl,
     borderRadius: Radius.lg,
     opacity: 0.2,
   },

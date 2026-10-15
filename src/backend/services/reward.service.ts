@@ -80,7 +80,7 @@ const updateCurrentReward = async (
     currentReward.requiredPoints = requiredPoints;
   }
 
-  if (available) {
+  if (available !== undefined) {
     currentReward.available = available;
   }
 

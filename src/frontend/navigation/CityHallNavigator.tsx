@@ -1,18 +1,19 @@
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import * as LucideIcons from "lucide-react-native";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-import CityHallScreen from "@screens/CityHallScreen";
+import ManageAssociationsScreen from "@screens/ManageAssociationsScreen";
 import ManageUsersScreen from "@screens/ManageUsersScreen";
 import ProfileScreen from "@screens/ProfileScreen";
 
 import { Icon } from "@components/ui";
 import { useThemeColor } from "@hooks/useThemeColor";
-import {
-  BottomTabNavigationProp,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
+import ManageRewardsScreen from "@screens/ManageRewardsScreen";
 import { Colors } from "@theme/colors";
-import { useTranslation } from "react-i18next";
 
 type TabParamList = {
   Associations: undefined;
@@ -44,6 +45,7 @@ export const CityHallNavigator = () => {
               break;
             case "Profile":
               iconName = "User";
+              break;
             case "Users":
               iconName = "UserGroup";
               break;
@@ -75,8 +77,8 @@ export const CityHallNavigator = () => {
         headerTitle: t(`common.headerTab.${route.name}`),
       })}
     >
-      <Tab.Screen name="CityHall" component={CityHallScreen} />
-      <Tab.Screen name="Associations" component={() => <></>} />
+      <Tab.Screen name="CityHall" component={ManageRewardsScreen} />
+      <Tab.Screen name="Associations" component={ManageAssociationsScreen} />
       <Tab.Screen name="Users" component={ManageUsersScreen} />
       <Tab.Screen
         name="Profile"

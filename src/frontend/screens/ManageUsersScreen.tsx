@@ -1,14 +1,16 @@
-import React, { useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useMemo, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
-import { UserCard, View } from "@components/ui";
+import { BlockUserModal, UserCard, View } from "@components/ui";
+import { UserRole } from "@constants/common";
+import { User } from "@frontend-types/user.type";
 import { useCityHallStore } from "@store/cityHallStore";
 import { Spacing } from "@theme/spacing";
 
 export default function ManageUsersScreen() {
-  const { t } = useTranslation();
   const { userList } = useCityHallStore();
+
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const filteredUsers = useMemo(() => {
     return userList.filter(
@@ -20,12 +22,26 @@ export default function ManageUsersScreen() {
     <View style={styles.deliveryContainer}>
       <FlatList
         data={filteredUsers}
-        renderItem={({ item }) => <UserCard key={item.id} data={item} />}
+        renderItem={({ item }) => (
+          <UserCard
+            key={item.id}
+            data={item}
+            role={"CITIZEN" as UserRole}
+            setCurrentUser={setSelectedUser}
+          />
+        )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{
           paddingBottom: 24,
         }}
       />
+      {selectedUser && (
+        <BlockUserModal
+          user={selectedUser}
+          visible
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </View>
   );
 }

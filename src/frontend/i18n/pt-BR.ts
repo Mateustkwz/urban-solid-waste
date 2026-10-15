@@ -182,6 +182,9 @@ export default {
       editDelivery: "Erro ao editar entrega",
       rewardRescue: "Erro ao resgatar recompensa",
       updateDeliveryStatus: "Erro ao atualizar status da entrega",
+      updateReward: "Erro ao atualizar recompensa",
+      blockUser: "Erro ao bloquear usuário",
+      unblockUser: "Erro ao desbloquear usuário",
     },
   },
   splash: {

@@ -55,6 +55,7 @@ const userAuthentication = async (
   password: string,
 ): Promise<{ user: User; token: string }> => {
   const isValidDocument = isValidCPF(cpfOrCnpj) || isValidCNPJ(cpfOrCnpj);
+
   if (!isValidDocument) {
     throw new Error(createConflictError(errorMessages.invalidDocument));
   }
@@ -63,11 +64,14 @@ const userAuthentication = async (
 
   try {
     user = await userService.getUserByDocument(cpfOrCnpj);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     if (!user) {
       throw new Error(createNotFoundError(errorMessages.userNotRegistered));
     }
+  }
+
+  if (user.block) {
+    throw new Error(createConflictError(errorMessages.blockedUser));
   }
 
   if (user?.password !== (await encryptPassword(password))) {

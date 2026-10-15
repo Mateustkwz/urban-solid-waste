@@ -28,6 +28,7 @@ export const convertUserDataToModel = (user: User): UserModel => {
     role: user.role,
     cpf_or_cnpj: user.cpfOrCnpj,
     points: user.points || 0,
+    block: user.block,
   };
 };
 
@@ -42,6 +43,7 @@ export const convertUserModelToData = (user: UserModel): User => {
     role: user.role,
     cpfOrCnpj: user.cpf_or_cnpj,
     points: user.points || 0,
+    block: user.block,
   };
 };
 

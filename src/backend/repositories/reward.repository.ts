@@ -75,7 +75,8 @@ const createMockRewards = async (rewardsMock: Reward[]) => {
 };
 
 export {
-  createMockRewards, createReward,
+  createMockRewards,
+  createReward,
   deleteReward,
   getRewards,
   updateReward

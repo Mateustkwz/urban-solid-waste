@@ -47,12 +47,22 @@ const deleteAllAddresses = async (userId: string) => {
   return userService.deleteAddresses(userId);
 };
 
+const blockUser = async (userId: string) => {
+  return userService.blockUser(userId);
+};
+
+const unblockUser = async (userId: string) => {
+  return userService.unblockUser(userId);
+};
+
 export {
   addNewAddress,
+  blockUser,
   deleteAllAddresses,
   getAllUsers,
   getCurrentUser,
   getUserAddresses,
+  unblockUser,
   updateAddress,
   updateCurrentUser
 };

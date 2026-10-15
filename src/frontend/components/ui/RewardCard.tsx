@@ -8,16 +8,18 @@ import { Text, View } from ".";
 type RewardCardProps = {
   reward: Reward;
   handleReward: (reward: Reward) => void;
+  canBeDisabled?: boolean;
 };
 
 export const RewardCard: React.FC<RewardCardProps> = ({
   reward,
   handleReward,
+  canBeDisabled = true,
 }) => {
   return (
     <TouchableOpacity
       style={[styles.card, !reward.available && styles.cardUnavailable]}
-      disabled={!reward.available}
+      disabled={canBeDisabled && !reward.available}
       onPress={() => handleReward(reward)}
     >
       <Image source={{ uri: reward.img }} style={styles.image} />
@@ -53,9 +55,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-    maxWidth: 186,
     overflow: "hidden",
     borderWidth: 0.1,
+    maxWidth: 186,
   },
   cardUnavailable: {
     opacity: 0.5,
@@ -64,6 +66,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 92,
     marginRight: 12,
+    objectFit: "contain",
+    flex: 1,
   },
   info: {
     flex: 1,

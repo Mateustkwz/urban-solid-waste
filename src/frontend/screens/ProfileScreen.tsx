@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: Radius.xxl,
     left: -2,
-    width: 100,
+    maxWidth: 120,
   },
   currentLevelBackground: {
     position: "absolute",

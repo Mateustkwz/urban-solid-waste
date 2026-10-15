@@ -105,6 +105,7 @@ const errorMessages = {
   invalidAddressCity: "Cidade do endereço inválida!",
   invalidAddressState: "Estado do endereço inválido!",
   permissionDenied: "Usuário não tem permissão para realizar esta ação!",
+  blockedUser: "Usuário está bloqueado, contate o suporte!",
 };
 
 export {

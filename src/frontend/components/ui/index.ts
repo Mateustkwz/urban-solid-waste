@@ -1,4 +1,6 @@
+export { BlockUserModal } from "../modals/BlockUserModal";
 export { DeliveryStatusModal } from "../modals/DeliveryStatusModal";
+export { RewardSettingsModal } from "../modals/RewardSettingsModal";
 export { TextModal } from "../modals/TextModal";
 export { AddressCard } from "./AddressCard";
 export { AddressSelector } from "./AddressSelector";
